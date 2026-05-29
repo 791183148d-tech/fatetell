@@ -12,6 +12,12 @@
         </div>
 
         <!-- stripe_key raw: {{ stripe_key }} -->
+        {% if error %}
+        <div style="background:rgba(255,71,87,0.1);border:1px solid rgba(255,71,87,0.3);border-radius:8px;padding:16px;margin-bottom:24px;color:#ff4757;font-size:0.9rem;">
+            {{ error }}
+        </div>
+        {% endif %}
+
         {% if stripe_key %}
         {{ pricing_card(
             price="$%.2f" % price,
