@@ -34,6 +34,25 @@ def zodiac():
     return render_template("zodiac.html")
 
 
+@main_bp.route("/debug/env")
+def debug_env():
+    from infrastructure.config import settings
+    sk = settings.stripe_secret_key
+    pk = settings.stripe_publishable_key
+    dk = settings.deepseek_api_key
+    return {
+        "stripe_secret_configured": bool(sk),
+        "stripe_secret_prefix": sk[:10] + "..." if sk else "",
+        "stripe_publishable_configured": bool(pk),
+        "stripe_publishable_prefix": pk[:10] + "..." if pk else "",
+        "deepseek_configured": bool(dk),
+        "deepseek_prefix": dk[:10] + "..." if dk else "",
+        "is_live_mode": settings.is_live_mode,
+        "site_url": settings.site_url,
+        "port": settings.port,
+    }
+
+
 @main_bp.route("/robots.txt")
 def robots():
     site_url = settings.site_url

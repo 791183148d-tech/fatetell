@@ -31,10 +31,10 @@ class Settings:
     claude_max_tokens: int = 16000
     claude_timeout: int = 120
 
-    # ── Stripe ─────────────────────────────────────────────────────
-    stripe_secret_key: str = field(default_factory=lambda: os.getenv("STRIPE_SECRET_KEY", ""))
-    stripe_publishable_key: str = field(default_factory=lambda: os.getenv("STRIPE_PUBLISHABLE_KEY", ""))
-    stripe_webhook_secret: str = field(default_factory=lambda: os.getenv("STRIPE_WEBHOOK_SECRET", ""))
+    # ── Stripe (whitespace stripped) ───────────────────────────────
+    stripe_secret_key: str = field(default_factory=lambda: (os.getenv("STRIPE_SECRET_KEY") or "").strip())
+    stripe_publishable_key: str = field(default_factory=lambda: (os.getenv("STRIPE_PUBLISHABLE_KEY") or "").strip())
+    stripe_webhook_secret: str = field(default_factory=lambda: (os.getenv("STRIPE_WEBHOOK_SECRET") or "").strip())
 
     # ── Rate limiting ──────────────────────────────────────────────
     rate_limit_per_minute: int = 60

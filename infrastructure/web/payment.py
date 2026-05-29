@@ -75,8 +75,11 @@ def create_checkout_session():
     )
 
     if result.error:
+        logger.error("Stripe session creation failed: %s", result.error)
         return render_template(
             "payment.html", order_id=order_id, price=get_price(),
+            stripe_key=settings.stripe_publishable_key,
+            name=order.get("name", "You"),
             error="Payment system error. Please try again.",
         )
 
