@@ -31,10 +31,11 @@ class Settings:
     claude_max_tokens: int = 16000
     claude_timeout: int = 120
 
-    # ── Stripe (whitespace stripped) ───────────────────────────────
-    stripe_secret_key: str = field(default_factory=lambda: (os.getenv("STRIPE_SECRET_KEY") or "").strip())
-    stripe_publishable_key: str = field(default_factory=lambda: (os.getenv("STRIPE_PUBLISHABLE_KEY") or "").strip())
-    stripe_webhook_secret: str = field(default_factory=lambda: (os.getenv("STRIPE_WEBHOOK_SECRET") or "").strip())
+    # ── Stripe (all internal whitespace removed — Render pasting can
+    #     embed \n / spaces inside the key) ───────────────────────────
+    stripe_secret_key: str = field(default_factory=lambda: os.getenv("STRIPE_SECRET_KEY", "").translate(str.maketrans("", "", " \n\r\t")))
+    stripe_publishable_key: str = field(default_factory=lambda: os.getenv("STRIPE_PUBLISHABLE_KEY", "").translate(str.maketrans("", "", " \n\r\t")))
+    stripe_webhook_secret: str = field(default_factory=lambda: os.getenv("STRIPE_WEBHOOK_SECRET", "").translate(str.maketrans("", "", " \n\r\t")))
 
     # ── Rate limiting ──────────────────────────────────────────────
     rate_limit_per_minute: int = 60
