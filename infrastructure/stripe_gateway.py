@@ -65,7 +65,6 @@ class StripeService:
         try:
             session = self._client.checkout.Session.create(
                 mode="payment",
-                payment_method_types=["card"],
                 line_items=[{
                     "price_data": {
                         "currency": "usd",
@@ -80,6 +79,8 @@ class StripeService:
                 metadata={"order_id": order_id},
                 success_url=success_url,
                 cancel_url=cancel_url,
+                phone_number_collection={"enabled": False},
+                custom_text={"submit": {"message": "Pay $29.99 for your complete BaZi Life Reading Report."}},
             )
             return StripeResult(
                 session_url=session.url,
