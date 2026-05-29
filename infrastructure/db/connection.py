@@ -134,16 +134,16 @@ def init_db() -> None:
         current_ver = conn.execute("SELECT MAX(version) FROM _schema_version").fetchone()[0] or 0
 
     if current_ver < SCHEMA_VERSION:
-        # v4 → v5: add user_id + session_id columns to orders if missing
-        if current_ver < 5:
+        # Run full schema FIRST (creates tables with latest schema for fresh DBs)
+        conn.executescript(SCHEMA_SQL)
+
+        # v4 → v5: add user_id + session_id columns if upgrading existing DB
+        if current_ver > 0 and current_ver < 5:
             cols = [r[1] for r in conn.execute("PRAGMA table_info(orders)").fetchall()]
             if "user_id" not in cols:
                 conn.execute("ALTER TABLE orders ADD COLUMN user_id TEXT REFERENCES users(id)")
             if "session_id" not in cols:
                 conn.execute("ALTER TABLE orders ADD COLUMN session_id TEXT DEFAULT ''")
-
-        # Run full schema (CREATE TABLE IF NOT EXISTS + CREATE INDEX IF NOT EXISTS)
-        conn.executescript(SCHEMA_SQL)
 
         conn.execute("INSERT OR REPLACE INTO _schema_version (version) VALUES (?)", (SCHEMA_VERSION,))
         conn.commit()
