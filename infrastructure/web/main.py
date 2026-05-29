@@ -37,6 +37,7 @@ def zodiac():
 @main_bp.route("/debug/env")
 def debug_env():
     from infrastructure.config import settings
+    from infrastructure.stripe_gateway import stripe_service
     sk = settings.stripe_secret_key
     pk = settings.stripe_publishable_key
     dk = settings.deepseek_api_key
@@ -48,8 +49,30 @@ def debug_env():
         "deepseek_configured": bool(dk),
         "deepseek_prefix": dk[:10] + "..." if dk else "",
         "is_live_mode": settings.is_live_mode,
+        "stripe_client_initialized": stripe_service._client is not None,
         "site_url": settings.site_url,
         "port": settings.port,
+    }
+
+
+@main_bp.route("/debug/test-stripe")
+def debug_test_stripe():
+    """Directly test Stripe session creation."""
+    from infrastructure.stripe_gateway import stripe_service
+    from infrastructure.web._utils import price_cents
+    result = stripe_service.create_checkout_session(
+        order_id="test-debug-001",
+        price_cents=price_cents(),
+        success_url="https://fatetell-3c2x.onrender.com/payment/success",
+        cancel_url="https://fatetell-3c2x.onrender.com/payment/cancelled",
+    )
+    return {
+        "has_error": bool(result.error),
+        "error": result.error,
+        "has_session_url": bool(result.session_url),
+        "session_url_prefix": result.session_url[:50] + "..." if result.session_url else "",
+        "session_id": result.session_id,
+        "is_demo": result.is_demo,
     }
 
 
