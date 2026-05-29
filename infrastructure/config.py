@@ -18,7 +18,7 @@ load_dotenv(_env_path, override=True)
 class Settings:
     # ── App ────────────────────────────────────────────────────────
     secret_key: str = field(default_factory=lambda: os.getenv("SECRET_KEY", "dev-secret-key-change-me"))
-    site_url: str = field(default_factory=lambda: os.getenv("SITE_URL", "http://localhost:5050"))
+    site_url: str = field(default_factory=lambda: os.getenv("SITE_URL") or os.getenv("RENDER_EXTERNAL_URL", "http://localhost:5050"))
     port: int = int(os.getenv("PORT", "5050"))
     debug: bool = os.getenv("FLASK_DEBUG", "").lower() in ("1", "true", "yes")
     report_price_usd: float = float(os.getenv("REPORT_PRICE", "29.99"))
