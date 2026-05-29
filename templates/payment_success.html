@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import btn, spinner, status_dot, progress %}
+{% block title %}Payment Successful — FateTell{% endblock %}
+
+{% block content %}
+<section style="padding:80px 0;" class="ft-fade-in">
+    <div class="container" style="max-width:550px;text-align:center;">
+        {% if status == "completed" %}
+        <div style="font-size:3rem;margin-bottom:16px;">✅</div>
+        <h1 class="ft-section__title" style="font-size:2rem;margin-bottom:12px;">
+            Your Report is <span class="gold">Ready</span>
+        </h1>
+        <p class="ft-muted" style="margin-bottom:32px;">
+            Your personalized BaZi reading has been generated, {{ name }}.
+        </p>
+        {{ btn("Read Your Report", href="/report/" ~ order_id, variant="primary", size="lg") }}
+
+        {% elif status == "error" %}
+        <div style="font-size:3rem;margin-bottom:16px;">⚠️</div>
+        <h1 class="ft-section__title" style="font-size:2rem;margin-bottom:12px;">
+            Generation <span class="gold">Error</span>
+        </h1>
+        <p class="ft-muted" style="margin-bottom:32px;">
+            Something went wrong while generating your report. Our team has been notified.
+        </p>
+        {{ btn("Try Again", href="/input", variant="primary") }}
+
+        {% else %}
+        {{ spinner(size="lg") }}
+        <h1 class="ft-section__title" style="font-size:2rem;margin-bottom:12px;">
+            Generating Your <span class="gold">BaZi Report</span>
+        </h1>
+        <p class="ft-muted" style="margin-bottom:8px;">
+            Claude AI is writing your personalized 10,000+ word reading...
+        </p>
+        <p class="ft-muted" style="font-size:0.85rem;margin-bottom:32px;">
+            This usually takes 30–60 seconds.
+        </p>
+
+        {# Indeterminate progress bar — shows continuous animation while generating #}
+        <div style="max-width:320px;margin:0 auto 24px;">
+            {{ progress(variant="gold", label="Generating your BaZi report") }}
+        </div>
+
+        <div class="ft-card" style="padding:16px 24px;display:inline-block;">
+            {{ status_dot("generating") }}
+            <span style="color:var(--text2);font-size:0.9rem;" id="status-text">Generating your report...</span>
+        </div>
+        <p class="ft-muted" style="margin-top:24px;font-size:0.8rem;">
+            You can safely leave this page. Your report will be available at the same link.
+        </p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+{% if status and status not in ("completed", "error") %}
+<script>
+    (function poll() {
+        fetch('/api/report-status/{{ order_id }}')
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'completed') {
+                    window.location.href = data.redirect;
+                } else if (data.status === 'error') {
+                    document.querySelector('.ft-spinner')?.remove();
+                    document.querySelector('#status-text').textContent = 'Error generating report';
+                } else {
+                    setTimeout(poll, 2000);
+                }
+            })
+            .catch(function () { setTimeout(poll, 3000); });
+    })();
+</script>
+{% endif %}
+{% endblock %}

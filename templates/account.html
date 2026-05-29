@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import section_header, card, badge, btn, alert %}
+{% block title %}My Account — FateTell{% endblock %}
+
+{% block content %}
+<section class="ft-section" style="padding:60px 0;">
+    <div class="container" style="max-width:700px;">
+        {{ section_header(title='My <span class="gold">Account</span>', label="Dashboard") }}
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for cat, msg in messages %}
+            {{ alert(message=msg, type=cat) }}
+          {% endfor %}
+        {% endwith %}
+
+        <!-- Profile Card -->
+        <div class="ft-card ft-card--glow" style="padding:28px;margin-bottom:24px;">
+            <div style="display:flex;align-items:center;gap:16px;">
+                <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:#0a0a0f;">
+                    {{ (user.name or user.email)[:1].upper() }}
+                </div>
+                <div>
+                    <h3 style="font-size:1.2rem;font-weight:600;">{{ user.name or 'User' }}</h3>
+                    <div class="ft-muted" style="font-size:0.85rem;">{{ user.email }}</div>
+                    <div class="ft-muted" style="font-size:0.78rem;">Member since {{ user.created_at[:10] if user.created_at else 'today' }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order History -->
+        <h3 style="font-size:1.1rem;margin-bottom:16px;">📜 Reading History</h3>
+
+        {% if orders %}
+            {% for order in orders %}
+            <div class="ft-card" style="padding:16px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+                <div>
+                    <div style="font-weight:600;">{{ order.name }}</div>
+                    <div class="ft-muted" style="font-size:0.82rem;">
+                        {{ order.birth_data or '—' }} · {{ order.created_at[:10] }}
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <span class="ft-tag" style="background:{% if order.status == 'completed' %}rgba(76,175,80,0.1);color:#4CAF50{% elif order.status == 'paid' %}rgba(201,168,76,0.1);color:var(--gold){% else %}var(--bg3);color:var(--text3){% endif %};">
+                        {{ order.status }}
+                    </span>
+                    {% if order.status == 'completed' %}
+                    <a href="/report/{{ order.id }}" class="ft-btn ft-btn--outline ft-btn--sm">View</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="ft-card ft-center" style="padding:40px;">
+            <div style="font-size:2.5rem;margin-bottom:12px;">🔮</div>
+            <h3 style="font-size:1.1rem;margin-bottom:8px;">No readings yet</h3>
+            <p class="ft-muted" style="margin-bottom:20px;">Your BaZi reading history will appear here.</p>
+            <a href="/input" class="ft-btn ft-btn--primary">Get Your First Reading</a>
+        </div>
+        {% endif %}
+
+        <!-- Logout -->
+        <div class="ft-center" style="margin-top:32px;">
+            <a href="/logout" class="ft-btn ft-btn--outline ft-btn--sm">🚪 Log Out</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

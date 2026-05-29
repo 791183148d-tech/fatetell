@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import section_header, card, badge, btn, alert %}
+{% block title %}Palm Reading — FateTell{% endblock %}
+{% block meta_desc %}AI-powered palm reading (手相). Upload a photo of your palm for a detailed analysis using traditional Chinese palmistry and AI vision.{% endblock %}
+
+{% block content %}
+<section class="ft-section" style="padding:60px 0;">
+    <div class="container" style="max-width:750px;">
+        {{ section_header(title='Palm <span class="gold">Reading</span>', label="手相",
+                         subtitle="Upload a clear photo of your palm and our AI will analyze the lines, mounts, and features using traditional Chinese palmistry techniques.") }}
+
+        {% if error %}
+        {{ alert(message=error, type="error") }}
+        {% endif %}
+
+        <!-- Upload Form -->
+        <div class="ft-card ft-card--glow" style="padding:36px;margin-bottom:32px;">
+            <form method="POST" action="/palm" enctype="multipart/form-data" id="palm-form">
+                <!-- Hand selection -->
+                <div style="margin-bottom:20px;">
+                    <label class="ft-form-label">Choose Hand</label>
+                    <div style="display:flex;gap:12px;margin-top:8px;">
+                        <label class="ft-radio-card {% if hand == 'right' %}is-selected{% endif %}">
+                            <input type="radio" name="hand" value="right" {% if hand == 'right' %}checked{% endif %} onchange="this.parentElement.classList.add('is-selected');document.querySelectorAll('.ft-radio-card').forEach(e=>e!==this.parentElement&&e.classList.remove('is-selected'))">
+                            <span style="font-size:1.5rem;">✋</span>
+                            <span>Right Hand<br><small style="color:var(--text3);">Future &amp; career</small></span>
+                        </label>
+                        <label class="ft-radio-card {% if hand == 'left' %}is-selected{% endif %}">
+                            <input type="radio" name="hand" value="left" {% if hand == 'left' %}checked{% endif %} onchange="this.parentElement.classList.add('is-selected');document.querySelectorAll('.ft-radio-card').forEach(e=>e!==this.parentElement&&e.classList.remove('is-selected'))">
+                            <span style="font-size:1.5rem;">🤚</span>
+                            <span>Left Hand<br><small style="color:var(--text3);">Innate &amp; potential</small></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- File upload area -->
+                <div style="margin-bottom:20px;">
+                    <label class="ft-form-label ft-form-label--required">Upload Palm Photo</label>
+                    <div class="ft-upload-zone" id="upload-zone" role="button" tabindex="0" onclick="document.getElementById('palm-input').click()" onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('palm-input').click()">
+                        <div id="upload-placeholder" style="text-align:center;padding:40px 20px;">
+                            <div style="font-size:3rem;margin-bottom:12px;">🖐️</div>
+                            <div style="font-weight:600;margin-bottom:4px;">Click to upload</div>
+                            <div class="ft-muted" style="font-size:0.85rem;">JPG, PNG, or WebP · Max 10MB</div>
+                        </div>
+                        <div id="upload-preview" style="display:none;padding:16px;text-align:center;">
+                            <img id="preview-img" style="max-width:260px;max-height:260px;border-radius:12px;border:2px solid var(--border);">
+                            <div id="file-name" class="ft-muted" style="margin-top:8px;font-size:0.85rem;"></div>
+                        </div>
+                        <input type="file" id="palm-input" name="palm_image" accept="image/png,image/jpeg,image/gif,image/webp" required style="display:none" onchange="previewFile(this)">
+                    </div>
+                </div>
+
+                <button type="submit" class="ft-btn ft-btn--primary ft-btn--lg ft-btn--full" id="submit-btn">
+                    <span id="btn-text">Analyze My Palm</span>
+                    <span id="btn-spinner" style="display:none;"><span class="ft-spinner ft-spinner--sm" aria-hidden="true"></span> Analyzing...</span>
+                </button>
+            </form>
+        </div>
+
+        {% if result %}
+        <!-- Results -->
+        <div class="ft-card ft-card--glow" style="padding:36px;">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:16px;">
+                <span style="font-size:1.8rem;">🔮</span>
+                <div>
+                    <h3 style="font-size:1.2rem;font-weight:600;">Your {% if hand == 'right' %}Right{% else %}Left{% endif %} Hand Reading</h3>
+                    <div class="ft-muted" style="font-size:0.82rem;">AI-powered palmistry analysis</div>
+                </div>
+            </div>
+            <div class="palm-reading-content ft-report-content">
+                {{ result | markdown }}
+            </div>
+        </div>
+
+        <div class="ft-center" style="margin-top:24px;">
+            {{ btn("New Reading", href="/palm", variant="outline", size="md") }}
+        </div>
+        {% endif %}
+
+        <!-- Tips -->
+        {% if not result %}
+        <div class="ft-card" style="padding:24px;margin-top:32px;">
+            <h3 style="font-size:1rem;margin-bottom:12px;">📸 Tips for Best Results</h3>
+            <ul style="color:var(--text2);font-size:0.88rem;line-height:1.8;padding-left:20px;">
+                <li>Take the photo in <strong>natural lighting</strong> — avoid harsh shadows</li>
+                <li>Keep your <strong>fingers together</strong> and palm flat</li>
+                <li>Include the <strong>entire palm</strong> from wrist to fingertips</li>
+                <li><strong>Both hands</strong> have meaning — try each for a fuller picture</li>
+                <li>Clean your camera lens for a clear image</li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% block extra_css %}
+<style>
+.ft-radio-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg2);
+    flex: 1;
+    font-size: 0.9rem;
+}
+.ft-radio-card:hover { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+.ft-radio-card.is-selected { border-color: var(--gold); background: rgba(201,168,76,0.08); }
+.ft-radio-card input { display: none; }
+
+.ft-upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+    background: var(--bg2);
+}
+.ft-upload-zone:hover { border-color: var(--gold); background: rgba(201,168,76,0.03); }
+.ft-upload-zone:focus-within { border-color: var(--gold); outline: 2px solid rgba(201,168,76,0.2); }
+
+.ft-report-content { line-height: 1.8; font-size: 0.95rem; }
+.ft-report-content h2 { font-family: var(--font-display); font-size: 1.3rem; color: var(--gold); margin: 24px 0 12px; }
+.ft-report-content h3 { font-size: 1.05rem; color: var(--text); margin: 20px 0 10px; }
+.ft-report-content p { margin-bottom: 12px; color: var(--text2); }
+.ft-report-content strong { color: var(--text); }
+.ft-report-content ul, .ft-report-content ol { padding-left: 20px; margin-bottom: 12px; color: var(--text2); }
+.ft-report-content li { margin-bottom: 4px; }
+.ft-report-content hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function previewFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const zone = document.getElementById('upload-zone');
+    const placeholder = document.getElementById('upload-placeholder');
+    const preview = document.getElementById('upload-preview');
+    const img = document.getElementById('preview-img');
+    const name = document.getElementById('file-name');
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        img.src = e.target.result;
+        placeholder.style.display = 'none';
+        preview.style.display = 'block';
+        name.textContent = file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+    };
+    reader.readAsDataURL(file);
+}
+
+// Loading state on submit
+document.getElementById('palm-form').addEventListener('submit', function() {
+    const btn = document.getElementById('submit-btn');
+    const text = document.getElementById('btn-text');
+    const spinner = document.getElementById('btn-spinner');
+    btn.disabled = true;
+    text.style.display = 'none';
+    spinner.style.display = 'inline';
+});
+</script>
+{% endblock %}
+{% endblock %}

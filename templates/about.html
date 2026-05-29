@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import section_header, card %}
+{% block title %}About FateTell — AI BaZi Reading{% endblock %}
+
+{% block content %}
+<section class="ft-fade-in" style="padding:60px 0;">
+    <div class="container" style="max-width:700px;">
+        {{ section_header(title='About <span class="gold">FateTell</span>', label="About", divider=True) }}
+
+        <div class="ft-card ft-card--glow" style="padding:32px;margin-bottom:32px;">
+            <h2 class="ft-section__title" style="font-size:1.5rem;margin-bottom:16px;">Our Mission</h2>
+            <p class="ft-muted" style="line-height:1.8;">
+                FateTell brings the ancient wisdom of Chinese BaZi (Four Pillars of Destiny) to the modern world
+                through the power of AI. We believe that understanding your energetic blueprint is not about
+                fatalism — it's about self-awareness, timing, and personal growth.
+            </p>
+            <p class="ft-muted" style="line-height:1.8;margin-top:16px;">
+                Our AI combines <strong>2,000+ years of BaZi tradition</strong> with <strong>modern psychological insights</strong>
+                to deliver readings that are both spiritually grounded and practically useful.
+            </p>
+        </div>
+
+        <div class="ft-card" style="padding:32px;margin-bottom:32px;">
+            <h2 class="ft-section__title" style="font-size:1.5rem;margin-bottom:16px;">How Our AI Works</h2>
+            <ol class="ft-muted" style="padding-left:20px;line-height:2.2;">
+                <li><strong>BaZi Calculation</strong> — Your birth date and time are converted into the Four Pillars using traditional lunar calendar algorithms.</li>
+                <li><strong>Five Elements Analysis</strong> — The system calculates the balance of Wood, Fire, Earth, Metal, and Water in your chart.</li>
+                <li><strong>Ten Gods Mapping</strong> — Each of the eight characters is mapped to its corresponding spiritual influence (Shi Shen).</li>
+                <li><strong>Da Yun Calculation</strong> — Your 10-year life cycles are computed based on your gender and birth data.</li>
+                <li><strong>AI Interpretation</strong> — A large language model (Claude/DeepSeek) generates your personalized reading based on all this data.</li>
+            </ol>
+        </div>
+
+        <div class="ft-card" style="padding:32px;margin-bottom:32px;">
+            <h2 class="ft-section__title" style="font-size:1.5rem;margin-bottom:16px;">Core Values</h2>
+            <div style="display:grid;gap:16px;">
+                <div style="padding:16px;background:var(--bg4);border-radius:8px;">
+                    <strong class="gold">🔮 Empowerment, Not Fear</strong>
+                    <p class="ft-muted" style="font-size:0.9rem;margin-top:4px;">We never predict doom. Our readings focus on strengths, growth areas, and positive timing.</p>
+                </div>
+                <div style="padding:16px;background:var(--bg4);border-radius:8px;">
+                    <strong class="gold">🎓 Traditional Foundation</strong>
+                    <p class="ft-muted" style="font-size:0.9rem;margin-top:4px;">Our algorithms follow classical BaZi methods, not New Age speculation.</p>
+                </div>
+                <div style="padding:16px;background:var(--bg4);border-radius:8px;">
+                    <strong class="gold">🤖 AI-Enhanced</strong>
+                    <p class="ft-muted" style="font-size:0.9rem;margin-top:4px;">AI doesn't replace the wisdom — it makes it accessible, personalized, and instant.</p>
+                </div>
+                <div style="padding:16px;background:var(--bg4);border-radius:8px;">
+                    <strong class="gold">🔒 Privacy First</strong>
+                    <p class="ft-muted" style="font-size:0.9rem;margin-top:4px;">Your birth data is yours. We never share or sell it. Delete anytime.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="contact" class="ft-card" style="padding:32px;margin-bottom:32px;">
+            <h2 class="ft-section__title" style="font-size:1.5rem;margin-bottom:16px;">Contact</h2>
+            <p class="ft-muted" style="line-height:1.8;">
+                Questions, feedback, or refund requests? Reach out to us at
+                <strong class="gold">hello@fatetell.com</strong>
+            </p>
+        </div>
+
+        <div id="privacy" class="ft-card" style="padding:32px;">
+            <h2 class="ft-section__title" style="font-size:1.5rem;margin-bottom:16px;">Privacy</h2>
+            <p class="ft-muted" style="line-height:1.8;">
+                We collect only the birth information you provide to generate your BaZi chart and report.
+                We do not store payment information (processed by Stripe). You can request deletion of
+                your data at any time by emailing us. We never sell or share personal data with third parties.
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,204 @@
+{#
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║  FateTell Component System — Architecture & API Reference                   ║
+║                                                                             ║
+║  Architecture:                                                              ║
+║    Pure server-side rendering (Jinja2 macros) with progressive enhancement  ║
+║    via vanilla JS. No framework dependency.                                 ║
+║                                                                             ║
+║  Layer 1 — Macros (templates/components/_macros.html)                       ║
+║    Pure HTML generation. All state management via parameters.               ║
+║                                                                             ║
+║  Layer 2 — CSS (static/css/style.css)                                       ║
+║    Design tokens → component styles → responsive → print → reduced-motion   ║
+║                                                                             ║
+║  Layer 3 — JS (static/js/app.js)                                            ║
+║    Progressive enhancement: Modal, Toast, Form validation, Nav, FAQ, ...    ║
+║    Uses CustomEvent for loose coupling between modules.                     ║
+║                                                                             ║
+║  Usage: {% from "components/_macros.html" import modal, toast, ... %}      ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+=== BUTTON (btn) ===
+  {{ btn(text, href, variant, size, icon, attrs) }}
+  text    — string  Required. Label text.
+  href    — string  URL → renders <a>, omit → renders <button>
+  variant — string  "primary" (default) | "secondary" | "outline" | "ghost"
+  size    — string  "sm" | "md" (default) | "lg" | "full"
+  icon    — string  Emoji/icon before text. aria-hidden="true" applied.
+  attrs   — dict    Passed as HTML attributes (class, id, data-*, aria-*)
+  States: disabled via attrs={disabled:""}, aria-disabled via attrs={aria-disabled:"true"}
+  A11y:   Renders as <button> or <a> with proper roles. icon is aria-hidden.
+
+=== SUBMIT BUTTON (btn_submit) ===
+  {{ btn_submit(text, variant, size, icon, attrs) }}
+  Like btn() but always renders <button type="submit">.
+
+=== LOADING BUTTON (btn_loading) ===
+  {{ btn_loading(text, loading, disabled, variant, attrs) }}
+  loading  — bool  Shows inline spinner when true
+  disabled — bool  Disabled when true (or when loading)
+  A11y:    disabled attribute, spinner has aria-hidden
+
+=== CARD (card) ===
+  {{ card(title, body, variant, icon, footer, href, attrs) }}
+  title   — string  h3 heading
+  body    — string  p body text
+  variant — string  "default" | "glow" | "interactive" | "compact"
+  icon    — string  Shown above title, aria-hidden="true"
+  footer  — string  Footer content (HTML safe)
+  href    — string  Wraps card as link. style="text-decoration:none;color:inherit"
+  Edge:   Empty title/body renders no heading/p. Title is always h3 for hierarchy.
+
+=== PRICING CARD (pricing_card) ===
+  {{ pricing_card(price, label, desc, cta_text, cta_link, footer, children) }}
+  children — string  Raw HTML between desc and CTA (for hidden form fields, etc.)
+
+=== TESTIMONIAL CARD (testimonial_card) ===
+  {{ testimonial_card(text, name, location, attrs) }}
+  Edge: Empty location → no location div rendered.
+
+=== INPUT (input) ===
+  {{ input(name, type, label, value, placeholder, required, error, hint, attrs) }}
+  type     — string  "text" (default) | "email" | "password" | "tel" | ...
+  required — bool    Adds required + aria-required="true"
+  error    — string  Shows error message + aria-invalid + aria-describedby
+  hint     — string  Helper text below input
+  States:  error → adds .ft-input--error, aria-invalid, linked error message
+  A11y:    Label → label element. Error → role="alert". Hint → .ft-form-hint.
+
+=== SELECT (select) ===
+  {{ select(name, options, label, value, required, error, hint, placeholder, attrs) }}
+  options   — list  Strings, numbers, tuples (value,label), or dicts {value,label}
+  placeholder — string First option with empty value (prompt text)
+  Types:   string → label=value. int/float → label=value.
+           tuple → opt[0]=value, opt[1]=label.
+           dict → opt.value, opt.label
+  Edge:    Empty options → no <option> rendered.
+
+=== FORM ROW (form_row) ===
+  {% call form_row() %}...{% endcall %}  — two-column grid
+  {{ form_row(content="...") }}          — pre-rendered content
+  Responsive: collapses to single column at 600px.
+
+=== ALERT (alert) ===
+  {{ alert(message, type, attrs) }}
+  type  — "error" (default) | "success" | "info"
+  A11y: role="alert" always applied.
+
+=== SPINNER (spinner) ===
+  {{ spinner(size, label) }}
+  size  — "sm" | "md" (default) | "lg"
+  label — sr-only text for screen readers
+  A11y: role="status", aria-label
+
+=== SKELETON (skeleton) ===
+  {{ skeleton(type, lines) }}
+  type  — "text" (alternating widths) | "card" (title + body lines)
+  lines — int  Number of body lines (default 3)
+
+=== STATUS DOT (status_dot) ===
+  {{ status_dot(status) }}
+  status — "generating" (pulsing) | "completed" | "error"
+  A11y:  aria-hidden="true". Status communicated via surrounding text.
+
+=== BADGE (badge) ===
+  {{ badge(text, variant, attrs) }}
+  variant — "gold" (default) | "success" | "error"
+
+=== SECTION HEADER (section_header) ===
+  {{ section_header(title, subtitle, label, divider, class_prefix, attrs) }}
+  label    — string  Small uppercase label above title
+  subtitle — string  Description below title
+  divider  — bool    Show gold gradient divider (default true)
+
+=== STATS ROW (stats_row) ===
+  {{ stats_row(stats) }}
+  stats — list of dicts  [{"num": "2,000+", "label": "Years"}, ...]
+  Responsive: 3-col → 1-col at 600px.
+
+=== PILLAR BOX (pillar_box) ===
+  {{ pillar_box(pillar, label) }}
+  pillar — dict  {gan, zhi, wuxing, nayin, shi_shen_gan}
+  label  — string  "Year" | "Month" | "Day" | "Time"
+
+=== WUXING GRID (wuxing_grid) ===
+  {{ wuxing_grid(wuxing_count, colors, emojis) }}
+  wuxing_count — dict  {"木": 3.0, "火": 2.5, ...}
+  A11y:  role="list", progressbar role with aria-valuenow/min/max on bars.
+
+=== DAY MASTER CARD (day_master_card) ===
+  {{ day_master_card(dm_gan, dm_en, wuxing, strength) }}
+
+=== DA YUN LIST (da_yun_list) ===
+  {{ da_yun_list(cycles, max=5) }}
+  cycles — list of dicts  [{"gan_zhi": "...", "start_age": 8, "end_age": 17}]
+  Edge:  Empty cycles → nothing rendered.
+
+=== MODAL (modal) — NEW ===
+  {{ modal(id, title, body, confirm, cancel, variant, size, attrs) }}
+  Trigger: <button data-modal-open="my-modal">Open</button>
+  Close:   Click backdrop, click ×, press Escape, click Cancel
+  variant — "default" | "danger" | "success"
+  size    — "sm" | "md" (default) | "lg"
+  A11y:   role="dialog", aria-modal="true", aria-labelledby,
+          focus trap, ESC to close, returns focus to trigger.
+  Edge:   Scrollbar width compensated. Backdrop click to close.
+          Body scroll locked. Stacked modal support.
+
+=== PROGRESS BAR (progress) — NEW ===
+  {{ progress(value=none, variant, label) }}
+  value — int 0-100  Omit for indeterminate (animated).
+  variant — "gold" (default) | "success" | "error"
+  A11y:  role="progressbar", aria-valuenow/min/max.
+  Edge:  Indeterminate when no value given (uses CSS animation).
+
+=== EMPTY STATE (empty_state) — NEW ===
+  {{ empty_state(icon, title, body, action, href, attrs) }}
+  Edge:  No action/href → no button rendered.
+         Icon is aria-hidden="true".
+
+=== TOAST (toast_container) — NEW ===
+  {{ toast_container() }}  — Add once in base.html (already there)
+  Show via: window.__ftToast("message") or
+            window.__ftToast({message:"...", type:"error", duration:5000})
+            document.dispatchEvent(new CustomEvent('ft-toast', {detail:{...}}))
+  Types:  "error" | "success" | "info" | "warning"
+  A11y:   container has aria-live="polite". Each toast role="alert".
+  Edge:   Auto-dismiss after 4s (configurable, 0 = persist).
+          Stacked vertically from bottom-right.
+          Respects prefers-reduced-motion.
+
+=== AVATAR (avatar) — NEW ===
+  {{ avatar(name, src, size, attrs) }}
+  src  — Image URL. If omitted → initial-based (first letter of name).
+  size — "sm" | "md" (default) | "lg"
+  A11y: img alt or sr-only name text.
+
+=== TOOLTIP (tooltip_attrs) — NEW ===
+  <button {{ tooltip_attrs("Help text", position="top") }}>?</button>
+  position — "top" (default) | "bottom" | "left" | "right"
+  A11y:    Content from data-tooltip attribute.
+           Keyboard focus shows tooltip via :focus-visible.
+
+=== BUTTON GROUP (btn_group) — NEW ===
+  {{ btn_group(items, size, attrs) }}
+  items — list of dicts  [{"text":"A", "href":"/a", "variant":"primary"}, ...]
+  role="group" for screen reader grouping.
+
+=== FAQ ITEM (faq_item) ===
+  {{ faq_item(question, answer) }}
+  Renders <details>/<summary>. CSS-only open/close indicators.
+
+=== CTA BOX (cta_box) ===
+  {{ cta_box(title, text, btn_text, btn_link, btn_icon, attrs) }}
+
+=== DEMO BANNER (demo_banner) ===
+  {{ demo_banner(title, text) }}
+
+=== SECTION WRAPPER (section) ===
+  {% call section() %}...{% endcall %}  — 80px padding section
+
+=== JSON-LD (json_ld_organization) ===
+  {{ json_ld_organization() }}  — Schema.org WebApplication structured data.
+#}

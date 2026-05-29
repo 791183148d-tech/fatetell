@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import input, btn_submit, alert %}
+{% block title %}Register — FateTell{% endblock %}
+
+{% block content %}
+<section class="ft-section" style="padding:60px 0;">
+    <div class="container" style="max-width:450px;">
+        <div class="ft-center ft-mb-4">
+            <h2 class="ft-section__title" style="font-size:1.8rem;">Create <span class="gold">Account</span></h2>
+            <p class="ft-section__sub ft-mx-auto">Save your readings and access them anytime.</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for cat, msg in messages %}
+            {{ alert(message=msg, type=cat) }}
+          {% endfor %}
+        {% endwith %}
+
+        {% if error %}
+        {{ alert(message=error, type="error") }}
+        {% endif %}
+
+        <div class="ft-card ft-card--glow" style="padding:32px;">
+            <form method="POST" action="/register">
+                {{ input(name="name", label="Your Name", placeholder="Optional", value=request.form.get('name', '')) }}
+                {{ input(name="email", label="Email Address", type="email", placeholder="you@example.com", value=request.form.get('email', ''), required=True) }}
+                {{ input(name="password", label="Password", type="password", placeholder="At least 6 characters", required=True) }}
+                {{ input(name="confirm_password", label="Confirm Password", type="password", placeholder="Repeat your password", required=True) }}
+
+                <div style="margin-top:24px;">
+                    {{ btn_submit("Create Account", size="full") }}
+                </div>
+            </form>
+            <p class="ft-center ft-muted" style="margin-top:16px;font-size:0.88rem;">
+                Already have an account? <a href="/login" style="color:var(--gold);">Log in</a>
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

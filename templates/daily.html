@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import section_header, card, badge, btn %}
+{% block title %}Daily BaZi Energy — FateTell{% endblock %}
+
+{% block content %}
+<section class="ft-fade-in" style="padding:60px 0;">
+    <div class="container" style="max-width:700px;">
+        {{ section_header(title='Today\'s <span class="gold">Energy</span>', label="Daily BaZi", subtitle="Each day has its own BaZi pillar — a unique combination of Heavenly Stem and Earthly Branch that influences the day's energy. Check today's forecast to align your activities.") }}
+
+        {% set stems = ["甲(Jia) Wood·Yang","乙(Yi) Wood·Yin","丙(Bing) Fire·Yang","丁(Ding) Fire·Yin","戊(Wu) Earth·Yang","己(Ji) Earth·Yin","庚(Geng) Metal·Yang","辛(Xin) Metal·Yin","壬(Ren) Water·Yang","癸(Gui) Water·Yin"] %}
+        {% set animals = ["Rat🐀","Ox🐂","Tiger🐅","Rabbit🐇","Dragon🐉","Snake🐍","Horse🐴","Goat🐑","Monkey🐒","Rooster🐓","Dog🐕","Pig🐖"] %}
+        {% set day_stem_index = today.timetuple().tm_yday % 10 %}
+        {% set day_branch_index = today.timetuple().tm_yday % 12 %}
+        {% set day_stem = stems[day_stem_index] %}
+        {% set day_animal = animals[day_branch_index] %}
+
+        <div class="ft-card ft-card--glow ft-center" style="padding:40px;">
+            <div class="ft-muted" style="font-size:0.85rem;text-transform:uppercase;letter-spacing:2px;">{{ today.strftime('%A, %B %d, %Y') }}</div>
+            <div style="font-size:4rem;font-weight:700;color:var(--gold-light);margin:24px 0 8px;font-family:var(--font-display);">{{ day_stem.split("(")[0] }}{{ ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"][day_branch_index] }}</div>
+            <div style="font-size:1.1rem;margin-bottom:24px;">{{ day_stem }} · {{ day_animal }}</div>
+
+            {% set elements = ["Wood","Wood","Fire","Fire","Earth","Earth","Metal","Metal","Water","Water"] %}
+            {% set yinyang = ["Yang","Yin","Yang","Yin","Yang","Yin","Yang","Yin","Yang","Yin"] %}
+            {% set bestfor = ["Planning","Creating","Leading","Refining","Building","Nurturing","Structuring","Detailing","Strategizing","Reflecting"] %}
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:left;">
+                {{ card(title="Element", body=elements[day_stem_index], variant="compact") }}
+                {{ card(title="Yin/Yang", body=yinyang[day_stem_index], variant="compact") }}
+                {{ card(title="Zodiac", body=day_animal, variant="compact") }}
+                {{ card(title="Best For", body=bestfor[day_stem_index], variant="compact") }}
+            </div>
+
+            <div class="ft-card" style="margin-top:32px;padding:24px;text-align:left;">
+                <h3 style="font-size:1rem;margin-bottom:12px;">Today's Guidance</h3>
+                <p class="ft-muted" style="line-height:1.7;">
+                    {% if day_stem_index < 2 %}
+                    Today has Wood energy — great for creative planning, growth-oriented conversations, and starting new projects. Plant seeds today.
+                    {% elif day_stem_index < 4 %}
+                    Today has Fire energy — perfect for presentations, networking, and taking bold action. Your charisma is at its peak.
+                    {% elif day_stem_index < 6 %}
+                    Today has Earth energy — focus on stability, routine tasks, and nurturing relationships. Ground yourself and others.
+                    {% elif day_stem_index < 8 %}
+                    Today has Metal energy — ideal for organizing, decluttering, setting boundaries, and making precise decisions.
+                    {% else %}
+                    Today has Water energy — great for reflection, strategy, deep conversations, and going with the flow. Rest when needed.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="ft-center mt-6">
+            <p class="ft-muted" style="margin-bottom:16px;">
+                Want a full BaZi reading personalized to YOUR birth chart?
+            </p>
+            {{ btn("Get Your BaZi Reading — $29.99", href="/input", variant="primary") }}
+        </div>
+    </div>
+</section>
+{% endblock %}

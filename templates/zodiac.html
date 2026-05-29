@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import section_header, card, btn %}
+{% block title %}Chinese Zodiac 2026 — Year of the Horse{% endblock %}
+
+{% block content %}
+<section class="ft-fade-in" style="padding:60px 0;">
+    <div class="container" style="max-width:750px;">
+        {{ section_header(title='Year of the <span class="gold">Fire Horse</span>', label="Zodiac 2026", subtitle='2026 is the Year of the Horse (丙午) — a powerful Fire Horse year. This is a year of action, passion, and bold moves. But the Fire Horse also brings volatility.') }}
+
+        <div class="ft-card ft-card--glow" style="padding:32px;margin-bottom:32px;">
+            <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+                <span style="font-size:4rem;">🐴</span>
+                <div>
+                    <h2 style="font-size:1.5rem;font-family:var(--font-display);">2026: 丙午 (Bing Wu) — Fire Horse</h2>
+                    <p class="ft-muted" style="margin-top:8px;line-height:1.7;">
+                        The Horse is the seventh animal in the Chinese zodiac. 2026 is a <strong>Fire Horse</strong>
+                        year, which occurs once every 60 years. Fire Horse years are intense — full of passion,
+                        adventure, and unexpected changes. They favor bold action over cautious planning.
+                    </p>
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:24px;">
+                {{ card(title="Element", body="Fire", variant="compact") }}
+                {{ card(title="Yin/Yang", body="Yang", variant="compact") }}
+                {{ card(title="Direction", body="South", variant="compact") }}
+                {{ card(title="Season", body="Summer", variant="compact") }}
+            </div>
+        </div>
+
+        {{ section_header(title="2026 Forecast by Zodiac", divider=False) }}
+        <div style="display:grid;gap:12px;">
+            {% set zodiac_data = [
+                ("🐀", "Rat", "⭐⭐⭐⭐", "A great year for career advancement. Your intelligence pairs well with the Horse's action energy. Take calculated risks."),
+                ("🐂", "Ox", "⭐⭐⭐", "Steady progress. The Horse year pushes you out of your comfort zone — which is exactly what you need. Stay flexible."),
+                ("🐅", "Tiger", "⭐⭐⭐⭐⭐", "Your year! Tigers and Horses are highly compatible. Everything aligns — love, career, personal growth."),
+                ("🐇", "Rabbit", "⭐⭐⭐", "A year of diplomacy. Your gentle nature balances the Horse's intensity. Focus on relationships and networking."),
+                ("🐉", "Dragon", "⭐⭐⭐⭐", "Dynamic energy. Your ambition meets the Horse's drive. Great for launching new ventures and projects."),
+                ("🐍", "Snake", "⭐⭐", "A challenging year. The Horse's speed clashes with your thoughtful nature. Slow down and be strategic."),
+                ("🐴", "Horse", "⭐⭐⭐⭐⭐", "Your year! Double the Horse energy. Incredible potential for growth, but beware of impulsiveness."),
+                ("🐑", "Goat", "⭐⭐⭐", "Creative abundance. The Fire feeds your artistic nature. Focus on expression and collaboration."),
+                ("🐒", "Monkey", "⭐⭐⭐⭐", "Clever opportunities. Your adaptability shines in this fast-paced year. Speculative investments favored."),
+                ("🐓", "Rooster", "⭐⭐", "A year of contrasts. The Horse clashes with Rooster. Practice patience and avoid conflicts."),
+                ("🐕", "Dog", "⭐⭐⭐", "Loyalty rewarded. Your steady nature balances the Horse's impulsiveness. Good for deepening relationships."),
+                ("🐖", "Pig", "⭐⭐⭐⭐", "Unexpected blessings. The Horse brings exciting surprises. Stay open to new possibilities."),
+            ] %}
+            {% for emoji, animal, rating, forecast in zodiac_data %}
+            <details class="ft-faq__item" style="padding:16px 20px;">
+                <summary class="ft-faq__question" style="display:flex;align-items:center;gap:16px;">
+                    <span style="font-size:1.5rem;">{{ emoji }}</span>
+                    <strong style="flex:1;">{{ animal }}</strong>
+                    <span class="gold" style="font-size:0.85rem;">{{ rating }}</span>
+                </summary>
+                <p class="ft-faq__answer" style="padding-left:44px;">{{ forecast }}</p>
+            </details>
+            {% endfor %}
+        </div>
+
+        <div class="ft-center mt-6">
+            <p class="ft-muted" style="margin-bottom:16px;">
+                Want a personalized 2026 forecast based on YOUR BaZi chart?
+            </p>
+            {{ btn("Get Your Full BaZi Reading — $29.99", href="/input", variant="primary") }}
+        </div>
+    </div>
+</section>
+{% endblock %}

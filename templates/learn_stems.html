@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import btn %}
+{% block title %}The 10 Heavenly Stems (Tian Gan) — Learn BaZi{% endblock %}
+{% block extra_css %}
+<style>
+    .stem-card { padding:24px; border-radius:var(--radius); background:var(--bg3); border:1px solid var(--border); border-left:4px solid; transition:all 0.3s; }
+    .stem-card:hover { transform:translateY(-2px); box-shadow:var(--shadow); }
+    .stem-symbol { font-size:2rem; font-weight:700; font-family:var(--font-display); }
+    .stem-element { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.8rem; font-weight:600; }
+    table.stem-table { width:100%; border-collapse:collapse; margin:20px 0; }
+    table.stem-table th, table.stem-table td { padding:12px 16px; text-align:left; border-bottom:1px solid var(--border); }
+    table.stem-table th { background:var(--bg4); font-size:0.85rem; text-transform:uppercase; color:var(--text2); }
+</style>
+{% endblock %}
+{% block content %}
+<section class="ft-fade-in" style="padding:60px 0;">
+    <div class="container" style="max-width:780px;">
+        <div class="ft-mb-4">
+            <a href="/learn" class="ft-muted" style="text-decoration:none;font-size:0.88rem;">← Back to Learn</a>
+            <div class="ft-section__label" style="margin-top:24px;">BaZi Fundamentals</div>
+            <h1 class="ft-section__title">The 10 Heavenly Stems: <span class="gold">Tian Gan</span> (天干)</h1>
+        </div>
+        <p class="ft-muted" style="margin-bottom:32px;line-height:1.8;">
+            The Ten Heavenly Stems are the celestial energies that combine with the Five Elements
+            to create ten distinct archetypes. Each stem has a Yin or Yang polarity and an associated element.
+        </p>
+
+        <table class="stem-table">
+            <thead><tr><th>Stem</th><th>Pinyin</th><th>Element</th><th>Polarity</th><th>Character</th></tr></thead>
+            <tbody>
+                <tr><td class="stem-symbol" style="color:#4CAF50;">甲</td><td>Jia</td><td><span class="stem-element" style="background:#4CAF50;color:#fff;">Wood</span></td><td>Yang</td><td>Pioneering, strong, expansive</td></tr>
+                <tr><td class="stem-symbol" style="color:#66BB6A;">乙</td><td>Yi</td><td><span class="stem-element" style="background:#66BB6A;color:#fff;">Wood</span></td><td>Yin</td><td>Gentle, flexible, artistic</td></tr>
+                <tr><td class="stem-symbol" style="color:#FF5722;">丙</td><td>Bing</td><td><span class="stem-element" style="background:#FF5722;color:#fff;">Fire</span></td><td>Yang</td><td>Charismatic, radiant, bold</td></tr>
+                <tr><td class="stem-symbol" style="color:#FF7043;">丁</td><td>Ding</td><td><span class="stem-element" style="background:#FF7043;color:#fff;">Fire</span></td><td>Yin</td><td>Warm, refined, persistent</td></tr>
+                <tr><td class="stem-symbol" style="color:#FFC107;">戊</td><td>Wu</td><td><span class="stem-element" style="background:#FFC107;color:#333;">Earth</span></td><td>Yang</td><td>Stable, reliable, nurturing</td></tr>
+                <tr><td class="stem-symbol" style="color:#FFCA28;">己</td><td>Ji</td><td><span class="stem-element" style="background:#FFCA28;color:#333;">Earth</span></td><td>Yin</td><td>Diplomatic, adaptable, careful</td></tr>
+                <tr><td class="stem-symbol" style="color:#9E9E9E;">庚</td><td>Geng</td><td><span class="stem-element" style="background:#9E9E9E;color:#fff;">Metal</span></td><td>Yang</td><td>Decisive, strong-willed, cutting</td></tr>
+                <tr><td class="stem-symbol" style="color:#BDBDBD;">辛</td><td>Xin</td><td><span class="stem-element" style="background:#BDBDBD;color:#333;">Metal</span></td><td>Yin</td><td>Refined, precise, meticulous</td></tr>
+                <tr><td class="stem-symbol" style="color:#2196F3;">壬</td><td>Ren</td><td><span class="stem-element" style="background:#2196F3;color:#fff;">Water</span></td><td>Yang</td><td>Strategic, deep, powerful</td></tr>
+                <tr><td class="stem-symbol" style="color:#42A5F5;">癸</td><td>Gui</td><td><span class="stem-element" style="background:#42A5F5;color:#fff;">Water</span></td><td>Yin</td><td>Intuitive, adaptive, wise</td></tr>
+            </tbody>
+        </table>
+
+        <div class="ft-center mt-6">
+            <p class="ft-muted" style="margin-bottom:24px;">
+                Discover which Heavenly Stem rules YOUR day pillar.
+            </p>
+            {{ btn("Get Your BaZi Reading — $29.99", href="/input", variant="primary") }}
+        </div>
+    </div>
+</section>
+{% endblock %}

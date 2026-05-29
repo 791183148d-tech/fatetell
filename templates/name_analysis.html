@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import section_header, card, badge, btn, alert, input %}
+{% block title %}Name Analysis — FateTell{% endblock %}
+{% block meta_desc %}Chinese name analysis (姓名学). Discover the Five Element balance of your name and how it influences your personality and destiny.{% endblock %}
+
+{% block content %}
+<section class="ft-section" style="padding:60px 0;">
+    <div class="container" style="max-width:650px;">
+        {{ section_header(title='Name <span class="gold">Analysis</span>', label="姓名学",
+                         subtitle="In Chinese metaphysics, your name carries vibrational energy. Each character's radical and stroke count corresponds to one of the Five Elements.") }}
+
+        {% if error %}
+        {{ alert(message=error, type="error") }}
+        {% endif %}
+
+        <!-- Input Form -->
+        <div class="ft-card ft-card--glow" style="padding:36px;margin-bottom:32px;">
+            <form method="POST" action="/name-analysis">
+                {{ input(name="name", label="Your Name", placeholder="Enter your full name (Chinese or English)",
+                         value=request.form.get('name', ''), required=True) }}
+
+                <div class="ft-form-group">
+                    <label class="ft-form-label">Year of Birth <span class="ft-muted">(optional)</span></label>
+                    <select name="birth_year" class="ft-select">
+                        <option value="">— Not specified —</option>
+                        {% for y in range(2026, 1949, -1) %}
+                        <option value="{{ y }}" {% if request.form.get('birth_year')|string == y|string %}selected{% endif %}>{{ y }}</option>
+                        {% endfor %}
+                    </select>
+                    <p class="ft-form-hint">Adds a Five Element reference based on your birth year.</p>
+                </div>
+
+                <div style="margin-top:24px;">
+                    <button type="submit" class="ft-btn ft-btn--primary ft-btn--lg ft-btn--full">
+                        ✨ Analyze My Name
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        {% if result %}
+        <!-- Results -->
+        <div class="ft-card ft-card--glow" style="padding:36px;margin-bottom:24px;">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+                <span style="font-size:2rem;">📛</span>
+                <div>
+                    <h3 style="font-size:1.3rem;font-weight:600;">{{ result.full_name }}</h3>
+                    <div class="ft-muted" style="font-size:0.85rem;">
+                        {% if result.name_type == 'chinese' %}
+                        姓「{{ result.surname }}」· 名「{{ result.given_name }}」
+                        {% else %}
+                        Name Number: {{ result.name_number }}
+                        {% endif %}
+                        {% if result.year_of_birth %} · Born {{ result.year_of_birth }}{% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% if result.name_type == 'chinese' %}
+            <!-- Three Talents (三才) -->
+            <div style="margin-bottom:24px;">
+                <h4 style="font-size:0.9rem;margin-bottom:12px;">三才 Five Element Configuration</h4>
+                <div class="sancai-grid">
+                    <div class="ft-card sancai-item">
+                        <div class="sancai-label">Heaven<br><small>姓: {{ result.surname }}</small></div>
+                        <div class="sancai-element">{{ result.sancai.heaven }}</div>
+                    </div>
+                    <div class="ft-card sancai-item">
+                        <div class="sancai-label">Human<br><small>名: {{ result.given_name[0] if result.given_name else '' }}</small></div>
+                        <div class="sancai-element">{{ result.sancai.human }}</div>
+                    </div>
+                    <div class="ft-card sancai-item">
+                        <div class="sancai-label">Earth<br><small>{{ result.given_name[-1] if result.given_name and result.given_name|length > 1 else '同人' }}</small></div>
+                        <div class="sancai-element">{{ result.sancai.earth }}</div>
+                    </div>
+                </div>
+                <p class="ft-muted" style="margin-top:12px;font-size:0.88rem;line-height:1.6;">
+                    {{ result.sancai_interpretation }}
+                </p>
+            </div>
+            {% else %}
+            <div style="margin-bottom:24px;">
+                <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;">
+                    <div class="ft-card" style="padding:16px;text-align:center;flex:1;">
+                        <div style="font-size:0.78rem;color:var(--text3);">Name Number</div>
+                        <div style="font-size:1.5rem;font-weight:700;color:var(--gold-light);">{{ result.name_number }}</div>
+                    </div>
+                    {% if result.year_element %}
+                    <div class="ft-card" style="padding:16px;text-align:center;flex:1;">
+                        <div style="font-size:0.78rem;color:var(--text3);">Birth Year Element</div>
+                        <div style="font-size:1.2rem;font-weight:600;color:var(--gold);">{{ result.year_element }}</div>
+                    </div>
+                    {% endif %}
+                    <div class="ft-card" style="padding:16px;text-align:center;flex:1;">
+                        <div style="font-size:0.78rem;color:var(--text3);">Dominant Energy</div>
+                        <div style="font-size:1.2rem;font-weight:600;color:var(--gold);">{{ result.dominant_element }}</div>
+                    </div>
+                </div>
+                <p style="font-size:0.92rem;line-height:1.7;">{{ result.guidance }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Five Element Balance -->
+            <h4 style="font-size:0.9rem;margin-bottom:12px;">Five Element Balance</h4>
+            {% set wuxing_colors = {"Wood":"#4CAF50","Fire":"#FF5722","Earth":"#FFC107","Metal":"#9E9E9E","Water":"#2196F3"} %}
+            {% set wuxing_emojis = {"Wood":"🌳","Fire":"🔥","Earth":"⛰️","Metal":"⚔️","Water":"🌊"} %}
+            {% set max_c = (result.wuxing_balance.values() | max) or 1 %}
+            {% for wx in ["Wood","Fire","Earth","Metal","Water"] %}
+            {% set count = result.wuxing_balance.get(wx, 0) %}
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+                <span style="font-size:1rem;min-width:28px;">{{ wuxing_emojis.get(wx, '') }}</span>
+                <span style="font-size:0.85rem;min-width:50px;color:{{ wuxing_colors.get(wx, '#fff') }};">{{ wx }}</span>
+                <div style="flex:1;height:20px;background:var(--bg2);border-radius:10px;overflow:hidden;">
+                    <div style="width:{{ (count / max_c * 100)|int }}%;height:100%;background:{{ wuxing_colors.get(wx, '#fff') }};border-radius:10px;opacity:0.7;transition:width 0.5s;"></div>
+                </div>
+                <span style="font-size:0.82rem;min-width:24px;color:var(--text2);">{{ count }}</span>
+            </div>
+            {% endfor %}
+
+            {% if result.missing_elements %}
+            <div class="ft-card" style="padding:16px;margin-top:16px;border-color:rgba(255,193,7,0.15);">
+                <div style="font-size:0.88rem;">
+                    <strong>Missing Elements:</strong>
+                    {% for e in result.missing_elements %}
+                    <span class="ft-tag" style="margin:0 4px;">{{ e }}</span>
+                    {% endfor %}
+                    — Consider adding these elements through your environment or name adjustments.
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Dominant element analysis -->
+            {% set element_advice = {
+                "Wood": ("Growth & Creativity", "Your name has strong Wood energy — creative, expansive, and growth-oriented. You thrive when you can initiate new projects and bring ideas to life."),
+                "Fire": ("Passion & Recognition", "Fire-dominant names bring charisma, visibility, and dynamic energy. You naturally shine in social situations and leadership roles."),
+                "Earth": ("Stability & Nurturing", "Earth energy makes you reliable, practical, and nurturing. You excel at building lasting structures and caring for others."),
+                "Metal": ("Structure & Precision", "Metal names indicate discipline, clarity, and determination. You have a natural ability to organize, refine, and perfect."),
+                "Water": ("Wisdom & Adaptability", "Water energy gives you deep intuition, flexibility, and wisdom. You navigate change with grace and understand hidden dynamics."),
+            } %}
+            {% if result.dominant_element in element_advice %}
+            <div class="ft-card" style="padding:20px;margin-top:16px;border-color:rgba(201,168,76,0.15);">
+                <h4 style="font-weight:600;margin-bottom:8px;">🌟 {{ element_advice[result.dominant_element][0] }}</h4>
+                <p class="ft-muted" style="font-size:0.9rem;line-height:1.7;">{{ element_advice[result.dominant_element][1] }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="ft-center" style="margin-top:24px;">
+            {{ btn("Analyze Another Name", href="/name-analysis", variant="outline", size="md") }}
+        </div>
+        {% endif %}
+
+        <!-- Info -->
+        {% if not result %}
+        <div class="ft-card" style="padding:24px;margin-top:24px;">
+            <h3 style="font-size:1rem;margin-bottom:12px;">📖 About Name Analysis</h3>
+            <p class="ft-muted" style="font-size:0.88rem;line-height:1.7;">
+                Chinese Name Science (姓名学) analyzes the Five Element energy of names by examining
+                character radicals, stroke counts, and sound vibrations. A well-balanced name supports
+                your natural element from your BaZi chart, while a poorly-balanced one may create
+                challenges. This analysis works for both Chinese characters and English names.
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+.sancai-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+.sancai-item {
+    padding: 20px;
+    text-align: center;
+    border-color: rgba(201,168,76,0.15);
+}
+.sancai-label {
+    font-size: 0.82rem;
+    color: var(--text2);
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+.sancai-element {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--gold-light);
+}
+@media (max-width:500px) {
+    .sancai-grid { grid-template-columns: 1fr; }
+}
+</style>
+{% endblock %}

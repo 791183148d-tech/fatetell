@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import btn %}
+{% block title %}Da Yun (10-Year Life Cycles) — Learn BaZi{% endblock %}
+{% block extra_css %}
+<style>
+    .cycle-diagram { display:flex; gap:8px; overflow-x:auto; padding:20px 0; }
+    .cycle-block { min-width:120px; padding:16px; border-radius:var(--radius); background:var(--bg3); border:1px solid var(--border); text-align:center; flex-shrink:0; }
+    .cycle-block.active { border-color:var(--gold); background:var(--bg4); }
+    .cycle-block .age { font-size:0.75rem; color:var(--text2); text-transform:uppercase; }
+    .cycle-block .pillar { font-size:1.3rem; font-weight:700; font-family:var(--font-display); margin:8px 0; }
+    .cycle-block .element { font-size:0.8rem; }
+</style>
+{% endblock %}
+{% block content %}
+<section class="ft-fade-in" style="padding:60px 0;">
+    <div class="container" style="max-width:780px;">
+        <div class="ft-mb-4">
+            <a href="/learn" class="ft-muted" style="text-decoration:none;font-size:0.88rem;">← Back to Learn</a>
+            <div class="ft-section__label" style="margin-top:24px;">BaZi Analysis</div>
+            <h1 class="ft-section__title">Da Yun: Your <span class="gold">10-Year Life Cycles</span> (大运)</h1>
+        </div>
+        <p class="ft-muted" style="margin-bottom:32px;line-height:1.8;">
+            Da Yun (大运), meaning "Great Fortune" or "Big Transport", represents the 10-year cycles
+            that shape your life's journey. Each cycle brings a different elemental energy that interacts
+            with your birth chart, creating favorable or challenging periods for different areas of life.
+        </p>
+
+        <div class="ft-card ft-card--glow" style="padding:24px;margin-bottom:32px;">
+            <h2 style="font-size:1.2rem;margin-bottom:16px;">How Da Yun Works</h2>
+            <p class="ft-muted" style="line-height:1.8;">
+                Your first Da Yun cycle starts at a specific age (calculated from your birth data and gender).
+                Each subsequent cycle lasts 10 years. The pillar (Heavenly Stem + Earthly Branch) of each cycle
+                interacts with your natal chart — a Wood cycle may bring growth to a Wood Day Master, or
+                challenge to an Earth Day Master (Wood controls Earth).
+            </p>
+        </div>
+
+        <div class="ft-card" style="padding:24px;margin-bottom:32px;">
+            <h2 style="font-size:1.2rem;margin-bottom:16px;">Example: Da Yun Timeline</h2>
+            <div class="cycle-diagram">
+                <div class="cycle-block active"><div class="age">Age 0–9</div><div class="pillar">庚申</div><div class="element">Yang Metal</div></div>
+                <div class="cycle-block"><div class="age">Age 10–19</div><div class="pillar">辛酉</div><div class="element">Yin Metal</div></div>
+                <div class="cycle-block"><div class="age">Age 20–29</div><div class="pillar">壬戌</div><div class="element">Yang Water</div></div>
+                <div class="cycle-block"><div class="age">Age 30–39</div><div class="pillar">癸亥</div><div class="element">Yin Water</div></div>
+                <div class="cycle-block"><div class="age">Age 40–49</div><div class="pillar">甲子</div><div class="element">Yang Wood</div></div>
+                <div class="cycle-block"><div class="age">Age 50–59</div><div class="pillar">乙丑</div><div class="element">Yin Wood</div></div>
+            </div>
+            <p class="ft-muted" style="font-size:0.85rem;margin-top:12px;">Highlighted = current cycle</p>
+        </div>
+
+        <div class="ft-center mt-6">
+            <p class="ft-muted" style="margin-bottom:24px;">
+                Discover YOUR Da Yun cycles and what they mean for your life path.
+            </p>
+            {{ btn("Get Your BaZi Reading — $29.99", href="/input", variant="primary") }}
+        </div>
+    </div>
+</section>
+{% endblock %}

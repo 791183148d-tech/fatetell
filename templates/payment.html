@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import pricing_card, btn_submit, btn, demo_banner %}
+{% block title %}Checkout — FateTell{% endblock %}
+
+{% block content %}
+<section class="ft-fade-in" style="padding:60px 0;">
+    <div class="container" style="max-width:500px;">
+        <div class="ft-center ft-mb-4">
+            <h2 class="ft-section__title" style="font-size:2rem;">
+                Complete Your <span class="gold">Purchase</span>
+            </h2>
+        </div>
+
+        <!-- stripe_key raw: {{ stripe_key }} -->
+        {% if stripe_key %}
+        {{ pricing_card(
+            price="$%.2f" % price,
+            desc="Full BaZi Life Reading Report · 10,000+ words",
+            cta_text="Pay with Credit Card",
+            footer="🔒 Secure checkout · Instant delivery · 7-day money-back guarantee",
+            children='<input type="hidden" name="order_id" value="' ~ order_id ~ '">'
+        ) }}
+        <form action="/create-checkout-session" method="POST">
+            <input type="hidden" name="order_id" value="{{ order_id }}">
+            {{ btn_submit("Pay with Credit Card", size="full") }}
+        </form>
+        {% else %}
+        {{ demo_banner() }}
+        {{ btn("View Full Report (Demo)", href="/payment/success", variant="primary", size="full") }}
+        <p class="ft-muted ft-center" style="margin-top:24px;font-size:0.8rem;">
+            🔒 Secure checkout · Instant delivery · 7-day money-back guarantee
+        </p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

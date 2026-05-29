@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import btn, badge %}
+{% block title %}Chinese Zodiac Animals — Complete Guide 2026{% endblock %}
+{% block extra_css %}
+<style>
+    .zodiac-card { display:flex; gap:24px; padding:24px; border-radius:var(--radius); background:var(--bg3); border:1px solid var(--border); margin-bottom:16px; transition:all 0.3s; align-items:flex-start; }
+    .zodiac-card:hover { border-color:var(--gold); }
+    .zodiac-card .animal-icon { font-size:3rem; min-width:60px; text-align:center; }
+    .zodiac-tag { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:600; margin-right:6px; }
+    @media(max-width:600px){ .zodiac-card { flex-direction:column; } }
+</style>
+{% endblock %}
+{% block content %}
+<section class="ft-fade-in" style="padding:60px 0;">
+    <div class="container" style="max-width:780px;">
+        <div class="ft-mb-4">
+            <a href="/learn" class="ft-muted" style="text-decoration:none;font-size:0.88rem;">← Back to Learn</a>
+            <div class="ft-section__label" style="margin-top:24px;">BaZi Fundamentals</div>
+            <h1 class="ft-section__title">Chinese <span class="gold">Zodiac</span> Animals — Complete Guide</h1>
+        </div>
+
+        {% for animal, icon, years, element, traits, compatible in [
+            ("Rat", "🐀", "2024, 2012, 2000, 1988, 1976, 1964", "Water", "Intelligent, adaptable, quick-witted", "Ox, Dragon, Monkey"),
+            ("Ox", "🐂", "2021, 2009, 1997, 1985, 1973, 1961", "Earth", "Diligent, reliable, methodical", "Rat, Snake, Rooster"),
+            ("Tiger", "🐅", "2022, 2010, 1998, 1986, 1974, 1962", "Wood", "Brave, competitive, charismatic", "Horse, Dog, Pig"),
+            ("Rabbit", "🐇", "2023, 2011, 1999, 1987, 1975, 1963", "Wood", "Gentle, elegant, artistic", "Goat, Pig, Dog"),
+            ("Dragon", "🐉", "2024, 2012, 2000, 1988, 1976, 1964", "Earth", "Confident, ambitious, visionary", "Rat, Monkey, Rooster"),
+            ("Snake", "🐍", "2025, 2013, 2001, 1989, 1977, 1965", "Fire", "Wise, intuitive, strategic", "Ox, Rooster, Monkey"),
+            ("Horse", "🐴", "2026, 2014, 2002, 1990, 1978, 1966", "Fire", "Energetic, passionate, independent", "Tiger, Goat, Dog"),
+            ("Goat", "🐑", "2027, 2015, 2003, 1991, 1979, 1967", "Earth", "Creative, calm, empathetic", "Rabbit, Horse, Pig"),
+            ("Monkey", "🐒", "2028, 2016, 2004, 1992, 1980, 1968", "Metal", "Clever, witty, inventive", "Rat, Dragon, Snake"),
+            ("Rooster", "🐓", "2029, 2017, 2005, 1993, 1981, 1969", "Metal", "Observant, hardworking, punctual", "Ox, Dragon, Snake"),
+            ("Dog", "🐕", "2030, 2018, 2006, 1994, 1982, 1970", "Earth", "Loyal, honest, protective", "Tiger, Rabbit, Horse"),
+            ("Pig", "🐖", "2031, 2019, 2007, 1995, 1983, 1971", "Water", "Generous, compassionate, easygoing", "Tiger, Rabbit, Goat"),
+        ] %}
+        <div class="zodiac-card">
+            <div class="animal-icon">{{ icon }}</div>
+            <div style="flex:1;">
+                <h3 style="font-size:1.2rem;margin-bottom:4px;">{{ animal }}</h3>
+                <div style="margin-bottom:8px;">
+                    {{ badge(text=element, variant="gold") }}
+                </div>
+                <p class="ft-muted" style="font-size:0.85rem;"><strong>Years:</strong> {{ years }}</p>
+                <p class="ft-muted" style="font-size:0.85rem;"><strong>Traits:</strong> {{ traits }}</p>
+                <p class="ft-muted" style="font-size:0.85rem;"><strong>Compatible:</strong> {{ compatible }}</p>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="ft-center mt-6">
+            <p class="ft-muted" style="margin-bottom:24px;">
+                Discover YOUR zodiac animal's 2026 forecast in your full BaZi report.
+            </p>
+            {{ btn("Get Your BaZi Reading — $29.99", href="/input", variant="primary") }}
+        </div>
+    </div>
+</section>
+{% endblock %}

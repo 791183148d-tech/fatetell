@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import btn, card %}
+{% block title %}The Five Elements (Wu Xing) — Learn BaZi{% endblock %}
+{% block content %}
+<section class="ft-fade-in" style="padding:60px 0;">
+    <div class="container" style="max-width:750px;">
+        <div class="ft-mb-4">
+            <a href="/learn" class="ft-muted" style="text-decoration:none;font-size:0.88rem;">← Back to Learn</a>
+            <div class="ft-section__label" style="margin-top:24px;">BaZi Fundamentals</div>
+            <h1 class="ft-section__title">The Five Elements: <span class="gold">Wu Xing</span> (五行)</h1>
+        </div>
+
+        <div class="ft-card ft-card--glow ft-mb-4">
+            <p class="ft-muted" style="line-height:1.8;font-size:1.05rem;">
+                The Five Elements — <strong>Wood</strong>, <strong>Fire</strong>, <strong>Earth</strong>,
+                <strong>Metal</strong>, and <strong>Water</strong> — form the foundation of all Chinese
+                metaphysics. In BaZi, your unique element combination determines your personality,
+                strengths, challenges, and life rhythm.
+            </p>
+        </div>
+
+        <h2 class="ft-section__title" style="font-size:1.5rem;margin:40px 0 20px;">The Five Elements</h2>
+        <div style="display:grid;gap:16px;">
+            {% for name, emoji, color, personality, strength, growth in [
+                ("Wood", "🌳", "#4CAF50", "Creative, ambitious, expansive", "Vision, planning, growth", "Needs Water to grow; Metal cuts it down"),
+                ("Fire", "🔥", "#FF5722", "Passionate, charismatic, intense", "Leadership, communication, warmth", "Needs Wood to fuel it; Water extinguishes it"),
+                ("Earth", "⛰️", "#FFC107", "Stable, nurturing, practical", "Reliability, grounding, patience", "Needs Fire to warm it; Wood drains it"),
+                ("Metal", "⚔️", "#9E9E9E", "Structured, disciplined, precise", "Focus, determination, refinement", "Needs Earth to form it; Fire melts it"),
+                ("Water", "🌊", "#2196F3", "Adaptable, intuitive, wise", "Depth, flow, emotional intelligence", "Needs Metal to guide it; Earth dams it"),
+            ] %}
+            <div class="ft-card" style="border-left:4px solid {{ color }};padding:24px;">
+                <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+                    <span style="font-size:2.5rem;">{{ emoji }}</span>
+                    <div style="flex:1;">
+                        <h3 style="color:{{ color }};font-size:1.2rem;">{{ name }} Element</h3>
+                        <p class="ft-muted" style="font-size:0.9rem;margin-top:4px;">
+                            <strong>Personality:</strong> {{ personality }} ·
+                            <strong>Strength:</strong> {{ strength }} ·
+                            <strong>Growth:</strong> {{ growth }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <h2 class="ft-section__title" style="font-size:1.5rem;margin:48px 0 20px;">The Creative Cycle (相生)</h2>
+        <div class="ft-card" style="padding:24px;">
+            <p class="ft-muted ft-center" style="font-size:1.1rem;line-height:2;">
+                🌳 Wood feeds <span style="color:#FF5722;">🔥 Fire</span> →
+                <span style="color:#FF5722;">🔥 Fire</span> creates <span style="color:#FFC107;">⛰️ Earth</span> (ash) →
+                <span style="color:#FFC107;">⛰️ Earth</span> bears <span style="color:#9E9E9E;">⚔️ Metal</span> (minerals) →
+                <span style="color:#9E9E9E;">⚔️ Metal</span> enriches <span style="color:#2196F3;">🌊 Water</span> →
+                <span style="color:#2196F3;">🌊 Water</span> nourishes <span style="color:#4CAF50;">🌳 Wood</span>
+            </p>
+        </div>
+
+        <h2 class="ft-section__title" style="font-size:1.5rem;margin:48px 0 20px;">The Destructive Cycle (相克)</h2>
+        <div class="ft-card" style="padding:24px;">
+            <p class="ft-muted ft-center" style="font-size:1.1rem;line-height:2;">
+                <span style="color:#9E9E9E;">⚔️ Metal</span> cuts <span style="color:#4CAF50;">🌳 Wood</span> →
+                <span style="color:#4CAF50;">🌳 Wood</span> drains <span style="color:#FFC107;">⛰️ Earth</span> →
+                <span style="color:#FFC107;">⛰️ Earth</span> dams <span style="color:#2196F3;">🌊 Water</span> →
+                <span style="color:#2196F3;">🌊 Water</span> extinguishes <span style="color:#FF5722;">🔥 Fire</span> →
+                <span style="color:#FF5722;">🔥 Fire</span> melts <span style="color:#9E9E9E;">⚔️ Metal</span>
+            </p>
+        </div>
+
+        <div class="ft-center mt-6">
+            <p class="ft-muted" style="margin-bottom:24px;">
+                Want to see YOUR personal Five Elements balance?
+            </p>
+            {{ btn("Get Your BaZi Reading — $29.99", href="/input", variant="primary") }}
+        </div>
+    </div>
+</section>
+{% endblock %}

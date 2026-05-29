@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import input, select, form_row, btn_submit, section_header, card, badge %}
+{% block title %}BaZi Compatibility Check — FateTell{% endblock %}
+
+{% block content %}
+<section class="ft-fade-in" style="padding:60px 0;">
+    <div class="container" style="max-width:700px;">
+        {{ section_header(title='BaZi <span class="gold">Compatibility</span> Check', label="Compatibility", subtitle="In BaZi, relationships are governed by the interaction of the Five Elements. Some element combinations naturally harmonize; others clash. Enter two birth charts to see how your energies interact.") }}
+
+        <div class="ft-card ft-card--glow" style="padding:40px;">
+            <form method="POST" action="/compatibility" data-validate>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+                    <div>
+                        <h3 style="font-size:1.05rem;margin-bottom:16px;color:var(--gold);">Person A</h3>
+                        {{ input(name="name1", placeholder="Name", required=True) }}
+                        {% call form_row() %}
+                            {{ select(name="year1", label="Year", options=make_opts(2026, 1949, -1), required=True) }}
+                            {{ select(name="month1", label="Month", options=make_opts(1, 13), required=True) }}
+                        {% endcall %}
+                        {% call form_row() %}
+                            {{ select(name="day1", label="Day", options=make_opts(1, 32), required=True) }}
+                            {{ select(name="hour1", label="Hour", options=make_opts(0, 24, 1, "{:02d}:00")) }}
+                            {{ select(name="gender1", label="Gender", options=[("male","M"), ("female","F")]) }}
+                        {% endcall %}
+                    </div>
+                    <div>
+                        <h3 style="font-size:1.05rem;margin-bottom:16px;color:var(--gold-light);">Person B</h3>
+                        {{ input(name="name2", placeholder="Name", required=True) }}
+                        {% call form_row() %}
+                            {{ select(name="year2", label="Year", options=make_opts(2026, 1949, -1), required=True) }}
+                            {{ select(name="month2", label="Month", options=make_opts(1, 13), required=True) }}
+                        {% endcall %}
+                        {% call form_row() %}
+                            {{ select(name="day2", label="Day", options=make_opts(1, 32), required=True) }}
+                            {{ select(name="hour2", label="Hour", options=make_opts(0, 24, 1, "{:02d}:00")) }}
+                            {{ select(name="gender2", label="Gender", options=[("male","M"), ("female","F")]) }}
+                        {% endcall %}
+                    </div>
+                </div>
+                {{ btn_submit("Check Compatibility", size="full") }}
+            </form>
+        </div>
+
+        {% if result %}
+        <div class="ft-card ft-card--glow mt-4" style="padding:32px;">
+            <h2 class="ft-section__title ft-center" style="font-size:1.5rem;">Compatibility Result</h2>
+            <div class="ft-divider"></div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                <div class="ft-card ft-center">
+                    <div class="ft-muted" style="font-size:0.8rem;text-transform:uppercase;">{{ result.name1 }}</div>
+                    <div style="font-size:2rem;font-weight:700;color:var(--gold);margin:8px 0;">{{ result.dm1 }}</div>
+                    <div class="ft-muted">{{ result.element1 }}</div>
+                </div>
+                <div class="ft-card ft-center">
+                    <div class="ft-muted" style="font-size:0.8rem;text-transform:uppercase;">{{ result.name2 }}</div>
+                    <div style="font-size:2rem;font-weight:700;color:var(--gold-light);margin:8px 0;">{{ result.dm2 }}</div>
+                    <div class="ft-muted">{{ result.element2 }}</div>
+                </div>
+            </div>
+
+            <div class="ft-card ft-center" style="margin-top:24px;">
+                <div class="ft-muted" style="font-size:0.8rem;text-transform:uppercase;">Overall Compatibility</div>
+                <div style="font-size:3rem;font-weight:700;margin:12px 0;color:var(--gold);">{{ result.score }}/10</div>
+                <div style="font-size:1.1rem;font-weight:600;">{{ result.verdict }}</div>
+                <p class="ft-muted" style="margin-top:12px;line-height:1.7;">{{ result.analysis }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="ft-center mt-6">
+            <p class="ft-muted">Note: This is a simplified compatibility preview. For a full relationship analysis including all Four Pillars, Ten Gods, and Da Yun timing, get a full BaZi reading.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,528 @@
+{#
+╔═══════════════════════════════════════════════════════════════════════════╗
+║  FateTell Component Macros                                              ║
+║  Usage: {% from "components/_macros.html" import btn, card, ... %}      ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+#}
+
+{##
+ # ── BUTTON ──────────────────────────────────────────────────────────────
+ # @param  text     string   Button label
+ # @param  href     string   Link URL (renders <a>) — omit for <button>
+ # @param  variant  string   "primary" | "secondary" | "outline" | "ghost"
+ # @param  size     string   "sm" | "md" | "lg" | "full"
+ # @param  icon     string   Emoji / icon before text
+ # @param  attrs    dict     Extra HTML attributes (class, id, data-*, aria-*)
+ #}
+{% macro btn(text, href="", variant="primary", size="md", icon="", attrs={}) %}
+  {% set cls = "ft-btn ft-btn--" ~ variant ~ " ft-btn--" ~ size ~ " " ~ attrs.get("class", "") %}
+  {% if href %}
+    <a href="{{ href }}" class="{{ cls }}" {% for k,v in attrs.items() if k != "class" %}{{ k }}="{{ v }}" {% endfor %}>
+      {% if icon %}<span class="ft-btn__icon" aria-hidden="true">{{ icon }}</span>{% endif %}
+      {{ text }}
+    </a>
+  {% else %}
+    <button type="{% if attrs.type %}{{ attrs.type }}{% else %}button{% endif %}" class="{{ cls }}" {% for k,v in attrs.items() if k not in ("class","type") %}{{ k }}="{{ v }}" {% endfor %}>
+      {% if icon %}<span class="ft-btn__icon" aria-hidden="true">{{ icon }}</span>{% endif %}
+      {{ text }}
+    </button>
+  {% endif %}
+{% endmacro %}
+
+{##
+ # Submit button — renders <button type="submit">
+ #}
+{% macro btn_submit(text, variant="primary", size="lg", icon="", attrs={}) %}
+  {% set _d = attrs.__setitem__("type", "submit") %}
+  {{ btn(text=text, href="", variant=variant, size=size, icon=icon, attrs=attrs) }}
+{% endmacro %}
+
+{##
+ # ── CARD ────────────────────────────────────────────────────────────────
+ # @param  title    string   Card title
+ # @param  body     string   Card body text
+ # @param  variant  string   "default" | "glow" | "interactive" | "compact"
+ # @param  icon     string   Icon shown above title
+ # @param  footer   string   Footer content (HTML safe)
+ # @param  href     string   Optional link wrapper
+ # @param  attrs    dict     Extra HTML attributes
+ #}
+{% macro card(title="", body="", variant="default", icon="", footer="", href="", attrs={}) %}
+  {% set cls = "ft-card ft-card--" ~ variant ~ " " ~ attrs.get("class", "") %}
+  {% set inner %}
+    {% if icon %}<span class="ft-card__icon" aria-hidden="true">{{ icon }}</span>{% endif %}
+    {% if title %}<h3 class="ft-card__title">{{ title|safe }}</h3>{% endif %}
+    {% if body %}<p class="ft-card__body">{{ body }}</p>{% endif %}
+    {% if footer %}<div class="ft-card__footer">{{ footer|safe }}</div>{% endif %}
+  {% endset %}
+  {% if href %}
+    <a href="{{ href }}" class="{{ cls }}" style="text-decoration:none;color:inherit;" {% for k,v in attrs.items() if k != "class" %}{{ k }}="{{ v }}" {% endfor %}>{{ inner }}</a>
+  {% else %}
+    <div class="{{ cls }}" {% for k,v in attrs.items() if k != "class" %}{{ k }}="{{ v }}" {% endfor %}>{{ inner }}</div>
+  {% endif %}
+{% endmacro %}
+
+{##
+ # Pricing Card
+ # @param  price     string   "$29.99"
+ # @param  label     string   "One-Time Payment"
+ # @param  desc      string   Description
+ # @param  cta_text  string   Button text
+ # @param  cta_link  string   Button URL
+ # @param  footer    string   Footer small text
+ # @param  children  string   Extra content between desc and CTA
+ #}
+{% macro pricing_card(price, label="One-Time Payment", desc="", cta_text="", cta_link="", footer="", children="") %}
+  <div class="ft-pricing" role="region" aria-label="Pricing">
+    <div class="ft-pricing__label">{{ label }}</div>
+    <div class="ft-pricing__price">{{ price }}</div>
+    {% if desc %}<p class="ft-pricing__desc">{{ desc }}</p>{% endif %}
+    {{ children|safe }}
+    {% if cta_text %}
+      {% if cta_link %}
+        <a href="{{ cta_link }}" class="ft-btn ft-btn--primary ft-btn--full">{{ cta_text }}</a>
+      {% else %}
+        <button type="submit" class="ft-btn ft-btn--primary ft-btn--full">{{ cta_text }}</button>
+      {% endif %}
+    {% endif %}
+    {% if footer %}<div class="ft-pricing__footer">{{ footer }}</div>{% endif %}
+  </div>
+{% endmacro %}
+
+{##
+ # Testimonial Card
+ #}
+{% macro testimonial_card(text, name, location="", attrs={}) %}
+  {% set initial = name[:1] %}
+  <div class="ft-card ft-testimonial" {% for k,v in attrs.items() %}{{ k }}="{{ v }}" {% endfor %}>
+    <p class="ft-testimonial__text">"{{ text }}"</p>
+    <div class="ft-testimonial__author">
+      <div class="ft-testimonial__avatar" aria-hidden="true">{{ initial }}</div>
+      <div>
+        <div class="ft-testimonial__name">{{ name }}</div>
+        {% if location %}<div class="ft-testimonial__location">{{ location }}</div>{% endif %}
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+
+{##
+ # ── FORM ────────────────────────────────────────────────────────────────
+ # Form group wrapper (label + input + error)
+ #}
+{% macro form_group(label="", content="", error="", hint="", required=False, attrs={}) %}
+  <div class="ft-form-group" {% for k,v in attrs.items() %}{{ k }}="{{ v }}" {% endfor %}>
+    {% if label %}
+      <label class="ft-form-label{% if required %} ft-form-label--required{% endif %}">{{ label }}</label>
+    {% endif %}
+    {{ content }}
+    {% if hint %}<p class="ft-form-hint">{{ hint }}</p>{% endif %}
+    {% if error %}<p class="ft-form-error" role="alert">⚠ {{ error }}</p>{% endif %}
+  </div>
+{% endmacro %}
+
+{##
+ # Text / email / password input
+ #}
+{% macro input(name, type="text", label="", value="", placeholder="", required=False, error="", hint="", attrs={}) %}
+  {% set cls = "ft-input" ~ (" ft-input--error" if error else "") ~ " " ~ attrs.get("class", "") %}
+  {% set input_html %}
+    <input type="{{ type }}" name="{{ name }}" id="field-{{ name }}" value="{{ value }}"
+           placeholder="{{ placeholder }}" class="{{ cls }}"
+           {% if required %}required aria-required="true"{% endif %}
+           {% if error %}aria-invalid="true" aria-describedby="err-{{ name }}"{% endif %}
+           {% for k,v in attrs.items() if k != "class" %}{{ k }}="{{ v }}" {% endfor %}>
+  {% endset %}
+  {{ form_group(label=label, content=input_html, error=error, hint=hint, required=required) }}
+{% endmacro %}
+
+{##
+ # Select dropdown
+ # @param  options  list of tuples  [("value", "label"), ...] or ["label", ...]
+ #}
+{% macro select(name, options=[], label="", value="", required=False, error="", hint="", placeholder="", attrs={}) %}
+  {% set cls = "ft-select" ~ (" ft-select--error" if error else "") ~ " " ~ attrs.get("class", "") %}
+  {% set opts %}
+    <select name="{{ name }}" id="field-{{ name }}" class="{{ cls }}"
+            {% if required %}required aria-required="true"{% endif %}
+            {% if error %}aria-invalid="true"{% endif %}
+            {% for k,v in attrs.items() if k != "class" %}{{ k }}="{{ v }}" {% endfor %}>
+      {% if placeholder %}<option value="">{{ placeholder }}</option>{% endif %}
+      {% for opt in options %}
+        {% if opt is mapping %}
+          <option value="{{ opt.value }}" {% if value|string == opt.value|string %}selected{% endif %}>{{ opt.label }}</option>
+        {% elif opt is string %}
+          <option value="{{ opt }}" {% if value|string == opt %}selected{% endif %}>{{ opt }}</option>
+        {% elif opt is number %}
+          <option value="{{ opt }}" {% if value|string == opt|string %}selected{% endif %}>{{ opt }}</option>
+        {% else %}
+          <option value="{{ opt[0] }}" {% if value|string == opt[0]|string %}selected{% endif %}>{{ opt[1] }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+  {% endset %}
+  {{ form_group(label=label, content=opts, error=error, hint=hint, required=required) }}
+{% endmacro %}
+
+{##
+ # Two-column form row
+ # @param  content  string  Pre-rendered HTML of the two fields
+ #}
+{% macro form_row(content="") %}
+  <div class="ft-form-row">{% if content %}{{ content }}{% else %}{{ caller() }}{% endif %}</div>
+{% endmacro %}
+
+{##
+ # ── FEEDBACK ────────────────────────────────────────────────────────────
+ # Alert / Error box
+ #}
+{% macro alert(message, type="error", attrs={}) %}
+  <div class="ft-alert ft-alert--{{ type }}" role="alert" {% for k,v in attrs.items() %}{{ k }}="{{ v }}" {% endfor %}>
+    <span aria-hidden="true">{% if type == "error" %}⚠{% elif type == "success" %}✓{% elif type == "info" %}ℹ{% endif %}</span>
+    <span>{{ message|safe }}</span>
+  </div>
+{% endmacro %}
+
+{##
+ # Spinner
+ #}
+{% macro spinner(size="md", label="Loading...") %}
+  <div class="ft-spinner ft-spinner--{{ size }}" role="status" aria-label="{{ label }}">
+    <span class="sr-only">{{ label }}</span>
+  </div>
+{% endmacro %}
+
+{##
+ # Skeleton placeholder
+ # @param lines  int  Number of text lines
+ #}
+{% macro skeleton(type="text", lines=3) %}
+  {% if type == "text" %}
+    {% for i in range(lines) %}
+      <div class="ft-skeleton ft-skeleton--text" style="width: {{ 50 + (i * 15) % 40 }}%;"></div>
+    {% endfor %}
+  {% elif type == "card" %}
+    <div class="ft-skeleton ft-skeleton--title"></div>
+    {% for i in range(lines) %}
+      <div class="ft-skeleton ft-skeleton--text"></div>
+    {% endfor %}
+  {% endif %}
+{% endmacro %}
+
+{##
+ # Status badge (generating / completed / error)
+ #}
+{% macro status_dot(status) %}
+  <span class="ft-status-dot ft-status-dot--{{ status }}" aria-hidden="true"></span>
+{% endmacro %}
+
+{##
+ # ── DISPLAY ─────────────────────────────────────────────────────────────
+ # Badge / Tag
+ #}
+{% macro badge(text, variant="gold", attrs={}) %}
+  <span class="ft-badge ft-badge--{{ variant }}" {% for k,v in attrs.items() %}{{ k }}="{{ v }}" {% endfor %}>{{ text|safe }}</span>
+{% endmacro %}
+
+{##
+ # Section header (label + title + subtitle + divider)
+ #}
+{% macro section_header(title, subtitle="", label="", divider=True, class_prefix="", attrs={}) %}
+  <div class="ft-center ft-mb-4 {{ class_prefix }}" {% for k,v in attrs.items() %}{{ k }}="{{ v }}" {% endfor %}>
+    {% if label %}<div class="ft-section__label">{{ label }}</div>{% endif %}
+    <h2 class="ft-section__title">{{ title|safe }}</h2>
+    {% if divider %}<div class="ft-divider"></div>{% endif %}
+    {% if subtitle %}<p class="ft-section__sub ft-mx-auto">{{ subtitle|safe }}</p>{% endif %}
+  </div>
+{% endmacro %}
+
+{##
+ # Stat display
+ #}
+{% macro stat(number, label, attrs={}) %}
+  <div {% for k,v in attrs.items() %}{{ k }}="{{ v }}" {% endfor %}>
+    <div class="ft-stat__num">{{ number }}</div>
+    <div class="ft-stat__label">{{ label }}</div>
+  </div>
+{% endmacro %}
+
+{##
+ # Stats row (3-column grid)
+ # @param  stats  list of dicts  [{"num": "2,000+", "label": "Years"}, ...]
+ #}
+{% macro stats_row(stats=[]) %}
+  <div class="ft-stats">
+    {% for s in stats %}
+      <div><div class="ft-stat__num">{{ s.num }}</div><div class="ft-stat__label">{{ s.label }}</div></div>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{##
+ # ── Bazi Components ─────────────────────────────────────────────────────
+ # Pillar Box (one of the Four Pillars)
+ #}
+{% macro pillar_box(pillar, label="") %}
+  <div class="ft-pillar">
+    <div class="ft-pillar__label">{{ label }} Pillar</div>
+    <div class="ft-pillar__gan">{{ pillar.gan }}</div>
+    <div class="ft-pillar__zhi">{{ pillar.zhi }}</div>
+    <div class="ft-pillar__meta">{{ pillar.wuxing }} · {{ pillar.nayin }}</div>
+    <div class="ft-pillar__meta" style="margin-top:4px;">{{ pillar.shi_shen_gan }}</div>
+  </div>
+{% endmacro %}
+
+{##
+ # Five Elements grid
+ # @param  wuxing_count  dict  {"木": 3.0, "火": 2.5, ...}
+ # @param  colors        dict  Element → hex color
+ # @param  emojis        dict  Element → emoji
+ #}
+{% macro wuxing_grid(wuxing_count, colors={}, emojis={}) %}
+  {% set default_colors = {"木":"#4CAF50","火":"#FF5722","土":"#FFC107","金":"#9E9E9E","水":"#2196F3"} %}
+  {% set default_emojis = {"木":"🌳","火":"🔥","土":"⛰️","金":"⚔️","水":"🌊"} %}
+  {% set wx_colors = colors or default_colors %}
+  {% set wx_emojis = emojis or default_emojis %}
+  {% set max_count = wuxing_count.values() | max or 1 %}
+  <div class="ft-wx-grid" role="list" aria-label="Five Elements Balance">
+    {% for wx_name in ["木","火","土","金","水"] %}
+      {% set count = wuxing_count.get(wx_name, 0) %}
+      <div class="ft-wx-item" role="listitem">
+        <div class="ft-wx-item__icon" aria-hidden="true">{{ wx_emojis.get(wx_name, "") }}</div>
+        <div class="ft-wx-item__name" style="color:{{ wx_colors.get(wx_name, '#fff') }};">{{ wx_name }}</div>
+        <div class="ft-wx-item__count">{{ count }}</div>
+        <div class="ft-wx-item__bar" style="width:{{ (count / max_count * 100)|int }}%;background:{{ wx_colors.get(wx_name, '#fff') }};" role="progressbar" aria-valuenow="{{ count }}" aria-valuemin="0" aria-valuemax="{{ max_count }}"></div>
+      </div>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{##
+ # Day Master display
+ #}
+{% macro day_master_card(dm_gan, dm_en, wuxing, strength) %}
+  <div class="ft-day-master">
+    <div class="ft-day-master__label">Your Day Master</div>
+    <div class="ft-day-master__gan">{{ dm_gan }}</div>
+    <div class="ft-day-master__detail">{{ dm_en }} · Element: {{ wuxing }}</div>
+    <div class="ft-day-master__strength">
+      Strength: <span class="ft-gold">{{ strength }}</span>
+    </div>
+  </div>
+{% endmacro %}
+
+{##
+ # Da Yun timeline (life cycles)
+ # @param  cycles  list of dicts  [{"gan_zhi": "...", "start_age": 8, "end_age": 17}]
+ # @param  max     int  Max cycles to show
+ #}
+{% macro da_yun_list(cycles, max=5) %}
+  {% for dy in cycles[:max] %}
+    <div class="ft-dayun-item">
+      <span class="ft-dayun-item__label">{{ dy.gan_zhi }}</span>
+      <span class="ft-dayun-item__range">Ages {{ dy.start_age }}–{{ dy.end_age }}</span>
+    </div>
+  {% endfor %}
+{% endmacro %}
+
+{##
+ # ── CTA Box ─────────────────────────────────────────────────────────────
+ #}
+{% macro cta_box(title, text="", btn_text="", btn_link="", btn_icon="", attrs={}) %}
+  <div class="ft-cta" {% for k,v in attrs.items() %}{{ k }}="{{ v }}" {% endfor %}>
+    <h2 class="ft-cta__title">{{ title|safe }}</h2>
+    {% if text %}<p class="ft-cta__text">{{ text|safe }}</p>{% endif %}
+    {% if btn_text %}
+      <a href="{{ btn_link }}" class="ft-btn ft-btn--primary ft-btn--lg">
+        {% if btn_icon %}<span class="ft-btn__icon" aria-hidden="true">{{ btn_icon }}</span>{% endif %}
+        {{ btn_text }}
+      </a>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{##
+ # ── Demo Banner ────────────────────────────────────────────────────────
+ #}
+{% macro demo_banner(title="💡 Demo Mode — No payment required", text="Stripe is not configured. Click below to view your full report for free.") %}
+  <div class="ft-demo-banner">
+    <p class="ft-demo-banner__title">{{ title|safe }}</p>
+    <p class="ft-demo-banner__text">{{ text|safe }}</p>
+  </div>
+{% endmacro %}
+
+{##
+ # ── SEO — JSON-LD structured data ─────────────────────────────────────
+ #}
+{% macro json_ld_organization() %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "FateTell",
+  "applicationCategory": "Astrology Application",
+  "description": "AI-powered BaZi (Four Pillars of Destiny) readings generating personalized life reports.",
+  "offers": {
+    "@type": "Offer",
+    "price": "29.99",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+{% endmacro %}
+
+{##
+ # ── Section wrapper ────────────────────────────────────────────────────
+ #}
+{% macro section(class="", attrs={}) %}
+  <section class="ft-section {{ class }}" {% for k,v in attrs.items() %}{{ k }}="{{ v }}" {% endfor %}>
+    <div class="container">
+      {{ caller() }}
+    </div>
+  </section>
+{% endmacro %}
+
+{##
+ # ── FAQ Item ───────────────────────────────────────────────────────────
+ #}
+{% macro faq_item(question, answer) %}
+  <details class="ft-faq__item">
+    <summary class="ft-faq__question">{{ question|safe }}</summary>
+    <p class="ft-faq__answer">{{ answer|safe }}</p>
+  </details>
+{% endmacro %}
+
+{##
+ # ── MODAL ───────────────────────────────────────────────────────────────
+ # @param  id        string   Modal element ID
+ # @param  title     string   Modal heading
+ # @param  body      string   Modal body content (HTML safe)
+ # @param  confirm   string   Confirm button text — omit to hide footer
+ # @param  cancel    string   Cancel button text
+ # @param  variant   string   "default" | "danger" | "success"
+ # @param  size      string   "sm" | "md" | "lg"
+ # @param  attrs     dict     Extra HTML attributes
+ #
+ # Usage (trigger):
+ #   <button data-modal-open="my-modal">Open</button>
+ #}
+{% macro modal(id, title="", body="", confirm="", cancel="Cancel", variant="default", size="md", attrs={}) %}
+  {% set cls = "ft-modal ft-modal--" ~ size ~ " " ~ attrs.get("class", "") %}
+  <div class="{{ cls }}" id="{{ id }}" role="dialog" aria-modal="true" aria-labelledby="{{ id }}-title" data-modal hidden>
+    <div class="ft-modal__backdrop" data-modal-close tabindex="-1"></div>
+    <div class="ft-modal__panel" role="document">
+      <div class="ft-modal__header">
+        {% if title %}<h2 class="ft-modal__title" id="{{ id }}-title">{{ title|safe }}</h2>{% endif %}
+        <button class="ft-modal__close" data-modal-close aria-label="Close dialog" type="button">&times;</button>
+      </div>
+      <div class="ft-modal__body">{{ body|safe }}</div>
+      {% if confirm %}
+      <div class="ft-modal__footer">
+        {% if cancel %}<button class="ft-btn ft-btn--outline" data-modal-close type="button">{{ cancel }}</button>{% endif %}
+        <button class="ft-btn ft-btn--{{ 'danger' if variant == 'danger' else 'primary' }}" data-modal-confirm type="button">{{ confirm }}</button>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+{% endmacro %}
+
+{##
+ # ── TOAST / Notification ───────────────────────────────────────────────
+ # To show dynamically: window.dispatchEvent(new CustomEvent('ft-toast', {detail:{message,type,duration}}))
+ #}
+{% macro toast_container() %}
+  <div class="ft-toast-container" id="ft-toast-container" aria-live="polite" aria-atomic="false"></div>
+{% endmacro %}
+
+{##
+ # ── PROGRESS BAR ────────────────────────────────────────────────────────
+ # @param  value     int     Current progress 0–100 (omit for indeterminate)
+ # @param  variant   string  "gold" | "success" | "error"
+ # @param  label     string  Screen-reader label
+ #}
+{% macro progress(value=none, variant="gold", label="Loading progress") %}
+  <div class="ft-progress" role="progressbar"
+       {% if value is not none %}aria-valuenow="{{ value }}" aria-valuemin="0" aria-valuemax="100"{% else %}aria-valuenow="0" data-indeterminate{% endif %}
+       aria-label="{{ label }}">
+    <div class="ft-progress__bar ft-progress__bar--{{ variant }}" style="{% if value is not none %}width:{{ value }}%{% endif %}"></div>
+  </div>
+{% endmacro %}
+
+{##
+ # ── EMPTY STATE ─────────────────────────────────────────────────────────
+ # @param  icon     string   Emoji / icon
+ # @param  title    string   Heading
+ # @param  body     string   Description text
+ # @param  action   string   CTA button text
+ # @param  href     string   CTA link
+ # @param  attrs    dict     Extra HTML attributes
+ #}
+{% macro empty_state(icon="📭", title="Nothing here yet", body="", action="", href="", attrs={}) %}
+  <div class="ft-empty" {% for k,v in attrs.items() %}{{ k }}="{{ v }}" {% endfor %}>
+    <div class="ft-empty__icon" aria-hidden="true">{{ icon }}</div>
+    <h3 class="ft-empty__title">{{ title|safe }}</h3>
+    {% if body %}<p class="ft-empty__body">{{ body|safe }}</p>{% endif %}
+    {% if action and href %}<a href="{{ href }}" class="ft-btn ft-btn--primary ft-btn--sm">{{ action }}</a>{% endif %}
+  </div>
+{% endmacro %}
+
+{##
+ # ── TOOLTIP ─────────────────────────────────────────────────────────────
+ # @param  text    string   Tooltip text
+ # @param  position string  "top" | "bottom" | "left" | "right"
+ # @param  attrs   dict     Extra HTML attributes
+ #
+ # Usage:
+ #   <button {{ tooltip_attrs("Save changes", position="bottom") }}>Save</button>
+ #}
+{% macro tooltip_attrs(text, position="top") %}
+  data-tooltip="{{ text }}" data-tooltip-pos="{{ position }}"
+{% endmacro %}
+
+{##
+ # ── AVATAR ──────────────────────────────────────────────────────────────
+ # @param  name    string   User name (used for initial)
+ # @param  src     string   Image URL — omit for initial-based avatar
+ # @param  size    string   "sm" | "md" | "lg"
+ # @param  attrs   dict     Extra HTML attributes
+ #}
+{% macro avatar(name="", src="", size="md", attrs={}) %}
+  {% set cls = "ft-avatar ft-avatar--" ~ size ~ " " ~ attrs.get("class", "") %}
+  <div class="{{ cls }}" {% for k,v in attrs.items() if k != "class" %}{{ k }}="{{ v }}" {% endfor %}>
+    {% if src %}
+      <img src="{{ src }}" alt="{{ name }}" class="ft-avatar__img">
+    {% else %}
+      <span class="ft-avatar__initial" aria-hidden="true">{{ name[:1] }}</span>
+      <span class="sr-only">{{ name }}</span>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{##
+ # ── BUTTON GROUP ────────────────────────────────────────────────────────
+ # @param  items    list of dicts  [{"text":"...", "href":"...", "variant":"..."}, ...]
+ # @param  size     string   "sm" | "md"
+ # @param  attrs    dict     Extra HTML attributes
+ #}
+{% macro btn_group(items=[], size="sm", attrs={}) %}
+  <div class="ft-btn-group" role="group" {% for k,v in attrs.items() %}{{ k }}="{{ v }}" {% endfor %}>
+    {% for item in items %}
+      <a href="{{ item.href }}" class="ft-btn ft-btn--{{ item.variant }} ft-btn--{{ size }}">{{ item.text }}</a>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{##
+ # ── LOADING BUTTON ─────────────────────────────────────────────────────
+ # @param  text     string   Button label
+ # @param  loading  bool     Show spinner
+ # @param  disabled bool     Disabled state
+ # @param  attrs    dict     Extra HTML attributes
+ #}
+{% macro btn_loading(text, loading=False, disabled=False, variant="primary", attrs={}) %}
+  {% set cls = "ft-btn ft-btn--" ~ variant ~ " ft-btn-loading" %}
+  <button class="{{ cls }}" {% if loading %}disabled data-loading{% endif %} {% if disabled and not loading %}disabled{% endif %} {% for k,v in attrs.items() %}{{ k }}="{{ v }}" {% endfor %}>
+    {% if loading %}<span class="ft-spinner ft-spinner--sm" aria-hidden="true"></span>{% endif %}
+    <span>{{ text }}</span>
+  </button>
+{% endmacro %}

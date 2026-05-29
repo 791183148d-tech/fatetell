@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import btn %}
+{% block title %}Payment Cancelled — FateTell{% endblock %}
+{% block content %}
+<section style="padding:80px 0;text-align:center;">
+    <div class="container" style="max-width:500px;">
+        <div style="font-size:3rem;margin-bottom:16px;">🕊️</div>
+        <h1 class="ft-section__title" style="font-size:2rem;margin-bottom:12px;">
+            Payment <span class="gold">Cancelled</span>
+        </h1>
+        <p class="ft-muted" style="margin-bottom:8px;">
+            No worries — your chart is saved and ready when you are.
+        </p>
+        <p class="ft-muted" style="margin-bottom:32px;">
+            Your BaZi reading will be here whenever you decide to proceed.
+        </p>
+        <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+            {% if order_id %}
+            {{ btn("Try Again", href="/checkout/" ~ order_id, variant="primary") }}
+            {% endif %}
+            {{ btn("New Reading", href="/input", variant="outline") }}
+        </div>
+    </div>
+</section>
+{% endblock %}

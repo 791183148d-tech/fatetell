@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import section_header, btn, card %}
+{% block title %}Your BaZi Reading — FateTell{% endblock %}
+{% block extra_css %}
+<style>
+    .report-content {
+        max-width: 750px; margin: 0 auto;
+        font-size: 1.05rem; line-height: 1.8;
+    }
+    .report-content h1 {
+        font-family: var(--font-display);
+        font-size: 2.2rem; margin: 48px 0 16px;
+        color: var(--gold);
+    }
+    .report-content h2 {
+        font-family: var(--font-display);
+        font-size: 1.5rem; margin: 40px 0 12px;
+        color: var(--gold-light);
+    }
+    .report-content h3 {
+        font-size: 1.15rem; margin: 32px 0 8px;
+        color: var(--text);
+    }
+    .report-content p {
+        margin: 16px 0;
+        color: var(--text2);
+    }
+    .report-content ul, .report-content ol {
+        margin: 16px 0; padding-left: 24px;
+        color: var(--text2);
+    }
+    .report-content li { margin: 8px 0; }
+    .report-content strong { color: var(--text); }
+    .report-content em { color: var(--gold); }
+    .report-content hr {
+        border: none; border-top: 1px solid var(--border);
+        margin: 40px 0;
+    }
+    .report-content blockquote {
+        border-left: 3px solid var(--gold);
+        padding: 16px 24px; margin: 24px 0;
+        background: var(--bg3);
+        border-radius: 0 8px 8px 0;
+        font-style: italic;
+        color: var(--gold-light);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="ft-fade-in" style="padding:40px 0;">
+    <div class="container" style="max-width:800px;">
+        <div class="ft-center ft-mb-4">
+            <h2 class="ft-section__title" style="font-size:2.2rem;">
+                Your <span class="gold">BaZi Life Reading</span>
+            </h2>
+            <p class="ft-muted">Prepared exclusively for {{ name }}</p>
+        </div>
+
+        <div class="report-content">
+            {{ report | safe }}
+        </div>
+
+        <div class="ft-card ft-center mt-6" style="padding:32px;">
+            <p class="ft-muted" style="margin-bottom:16px;">
+                Want to share this reading with a friend?
+            </p>
+            {{ btn("Get Another Reading", href="/input", variant="primary") }}
+        </div>
+    </div>
+</section>
+{% endblock %}

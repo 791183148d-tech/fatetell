@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import section_header, card, testimonial_card, stats_row, faq_item, cta_box, badge, btn %}
+{% block title %}FateTell — Discover Your Destiny Through AI BaZi Reading{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content hero-content--center">
+            <div class="ft-hero-tag">{{ badge("✨ 人工智能驱动 · 两千年的智慧") }}</div>
+            <h1>Discover the <em>Blueprint</em><br>of <span class="gold-glow">Your Life</span></h1>
+            <p>
+                东方古老智慧的结晶。八字、奇门遁甲、手相、姓名学 —— 千年术数，AI 为你解读。
+                输入你的出生信息，即可获得一份深度的命理分析报告。
+            </p>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;">
+                {{ btn("Get Your Reading — $29.99", href="/input", variant="primary", size="lg") }}
+                {{ btn("Learn About BaZi", href="/learn", variant="outline", size="lg") }}
+            </div>
+            {{ stats_row(stats=[
+                {"num": "2,000+", "label": "Years of Tradition"},
+                {"num": "10,000+", "label": "Words Per Report"},
+                {"num": "38.7%", "label": "Repeat Purchase Rate"},
+            ]) }}
+        </div>
+    </div>
+</section>
+
+<!-- Explore Categories -->
+<section class="ft-section ft-section--alt ft-reveal">
+    <div class="container">
+        {{ section_header(title='The World of <span class="gold">BaZi</span>', label="Explore", divider=True) }}
+        <div class="grid-4">
+            {% for icon, title, desc, link in [
+                ("☯️", "Your BaZi Chart", "Get a full AI-powered reading of your Four Pillars", "/input"),
+                ("🌳", "Five Elements", "Understand Wood, Fire, Earth, Metal, Water", "/learn/wuxing"),
+                ("🐉", "Zodiac 2026", "Your Chinese zodiac forecast for the Year of the Horse", "/zodiac"),
+                ("📅", "Daily BaZi", "Today's energy based on the day's pillar", "/daily"),
+                ("❤️", "Compatibility", "Compare two charts for relationship insight", "/compatibility"),
+                ("📖", "BaZi Basics", "Learn the fundamentals of Chinese astrology", "/learn"),
+                ("⭐", "Heavenly Stems", "The 10 Celestial energies explained", "/learn/stems"),
+                ("🗺️", "Life Cycles", "Understanding your Da Yun (10-year cycles)", "/learn/dayun"),
+            ] %}
+            {{ card(title=title, body=desc, variant="glow", icon=icon, href=link) }}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- What You Get -->
+<section class="ft-section ft-reveal">
+    <div class="container">
+        {{ section_header(title='What\'s Inside Your <span class="gold">BaZi Reading</span>', label="Your Report", divider=True) }}
+        <div class="grid-3">
+            {% for icon, title, desc in [
+                ("☯️", "Your Day Master", "Discover your core element — Wood, Fire, Earth, Metal, or Water — and how it shapes your personality, strengths, and blind spots."),
+                ("⚖️", "Five Elements Balance", "See which elements dominate your chart and which are missing. Learn how to restore harmony."),
+                ("💼", "Career & Wealth", "Your natural professional tendencies, ideal work environments, and timing for career moves."),
+                ("❤️", "Relationships", "Your relationship patterns, communication style, and what you need in a partner."),
+                ("🗓️", "Life Cycles (Da Yun)", "The 10-year chapters of your life. What each phase brings and how to make the most of it."),
+                ("🔮", "2026 Forecast", "What the Year of the Horse holds for you — career, love, health, and personal growth."),
+            ] %}
+            {{ card(title=title, body=desc, icon=icon) }}
+            {% endfor %}
+        </div>
+        <div class="ft-center mt-6">
+            {{ btn("Start Your Reading — $29.99", href="/input", variant="primary", size="lg") }}
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="ft-section ft-section--alt ft-reveal">
+    <div class="container">
+        {{ section_header(title='How It <span class="gold">Works</span>', label="Simple Process", divider=True) }}
+        <div class="grid-3">
+            {% for num, title, desc in [
+                ("01", "Enter Your Birth Info", "Your birth date, time, and gender. That's all we need to calculate your complete BaZi chart using traditional algorithms."),
+                ("02", "AI Analyzes Your Chart", "Our engine computes the Four Pillars, Five Elements balance, Ten Gods, and Da Yun cycles. Then Claude AI generates your personalized interpretation."),
+                ("03", "Read Your Life Report", "A beautifully formatted 10,000+ word report with deep insights about your personality, life path, relationships, and timing."),
+            ] %}
+            <div class="ft-card ft-card--glow ft-center">
+                <div class="ft-step-number">{{ num }}</div>
+                <h3 class="ft-card__title">{{ title }}</h3>
+                <p class="ft-card__body">{{ desc }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="ft-section ft-reveal">
+    <div class="container" style="max-width:700px;">
+        {{ section_header(title='What Our <span class="gold">Readers Say</span>', label="Testimonials", divider=True) }}
+        <div style="display:grid;gap:20px;">
+            {% for name, location, text in [
+                ("Sarah K.", "New York, USA", "I was skeptical about Chinese astrology, but this reading was eerily accurate about my career patterns. It explained why I've always felt torn between two paths — my BaZi chart shows competing elements I never knew about."),
+                ("James M.", "London, UK", "The 2026 forecast told me to expect a career shift in Q2. I just got a promotion offer I wasn't expecting. Whether it's destiny or self-awareness, this report gave me clarity."),
+                ("Yuki T.", "Tokyo, Japan", "As someone who grew up with Western astrology, BaZi was a revelation. The Five Elements analysis explained my personality in a way that felt much deeper than my Sun sign."),
+                ("Alex R.", "Berlin, Germany", "I've spent hundreds on human fortune tellers. This $29 report was more detailed and practical than any of them. The Da Yun (life cycles) section was scarily accurate about my past."),
+                ("Maria L.", "São Paulo, Brazil", "The compatibility section helped me understand why I clash with my boss. We have opposing Day Masters — Metal vs Fire. Now I know how to communicate better."),
+                ("David C.", "Sydney, Australia", "I bought this on a whim. Ended up staying up until 3am reading it. The personality analysis was so specific it felt like it was written by someone who knows me."),
+            ] %}
+            {{ testimonial_card(text=text, name=name, location=location) }}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section class="ft-section ft-section--alt">
+    <div class="container" style="max-width:650px;">
+        {{ section_header(title='Frequently Asked <span class="gold">Questions</span>', label="FAQ", divider=True) }}
+        {% for q, a in [
+            ("What exactly is BaZi?", "BaZi (八字), meaning 'Eight Characters', is a Chinese metaphysical system that uses your birth year, month, day, and hour to map your life's potential. Think of it as a cosmic user manual — it reveals your innate strengths, challenges, and the natural rhythms of your life."),
+            ("Is this fortune telling?", "Not in the way you might think. BaZi doesn't predict fixed events. Instead, it describes tendencies, timing, and energies — like a weather report for your life. We focus on self-discovery and practical guidance."),
+            ("What if I don't know my birth time?", "An approximate time works! The Four Pillars use the hour pillar for about 20% of the insight. If you don't know your exact time, selecting 12:00 PM gives you 80% of the reading's value."),
+            ("How accurate is the AI report?", "Our BaZi calculations follow traditional algorithms used for centuries. The AI interpretation is trained on classical texts and modern psychological insights. Users consistently report that the personality analysis is remarkably accurate."),
+            ("Can I get a refund?", "Absolutely. If you feel the report doesn't provide value, email us within 7 days for a full refund. No questions asked."),
+            ("How is my data handled?", "Your birth data is used only to generate your chart and report. We never share or sell your personal information. You can request deletion anytime."),
+            ("Do you offer compatibility readings?", "Yes! You can compare two charts in our Compatibility section. It analyzes how the Five Elements and Day Masters interact between two people."),
+        ] %}
+        {{ faq_item(question=q, answer=a) }}
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Final CTA -->
+<section class="ft-section ft-reveal" style="padding:60px 0;">
+    <div class="container ft-center">
+        <div class="ft-card ft-card--glow" style="max-width:600px;margin:0 auto;padding:48px;">
+            <h2 class="ft-section__title" style="font-size:2rem;line-height:1.2;">
+                Ready to Discover <span class="gold">Your Blueprint</span>?
+            </h2>
+            <p class="ft-muted" style="margin:16px 0 32px;">
+                东方古老智慧的结晶。你的命盘、奇门、手相，AI 为你一一道来。
+            </p>
+            {{ btn("Get Your BaZi Reading — $29.99", href="/input", variant="primary", size="lg") }}
+        </div>
+    </div>
+</section>
+{% endblock %}

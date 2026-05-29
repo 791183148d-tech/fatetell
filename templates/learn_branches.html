@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import btn %}
+{% block title %}The 12 Earthly Branches (Di Zhi) — Learn BaZi{% endblock %}
+{% block extra_css %}
+<style>
+    .branch-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; margin:24px 0; }
+    .branch-card { padding:20px; border-radius:var(--radius); background:var(--bg3); border:1px solid var(--border); text-align:center; transition:all 0.3s; }
+    .branch-card:hover { border-color:var(--gold); transform:translateY(-2px); }
+    .branch-card .animal { font-size:2.5rem; }
+    .branch-card .name { font-size:1.1rem; font-weight:600; margin:8px 0 4px; }
+    .branch-card .sub { font-size:0.8rem; color:var(--text2); }
+    .interaction-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    @media(max-width:600px){ .interaction-grid { grid-template-columns:1fr; } }
+</style>
+{% endblock %}
+{% block content %}
+<section class="ft-fade-in" style="padding:60px 0;">
+    <div class="container" style="max-width:780px;">
+        <div class="ft-mb-4">
+            <a href="/learn" class="ft-muted" style="text-decoration:none;font-size:0.88rem;">← Back to Learn</a>
+            <div class="ft-section__label" style="margin-top:24px;">BaZi Fundamentals</div>
+            <h1 class="ft-section__title">The 12 Earthly Branches: <span class="gold">Di Zhi</span> (地支)</h1>
+        </div>
+        <p class="ft-muted" style="margin-bottom:32px;line-height:1.8;">
+            The Twelve Earthly Branches represent the earthly energies that govern timing, seasons,
+            and the Chinese zodiac. Each branch carries its own element, animal, and unique characteristics.
+        </p>
+
+        <div class="branch-grid">
+            <div class="branch-card"><div class="animal">🐀</div><div class="name">子 (Zi) — Rat</div><div class="sub">Element: Water · Season: Winter</div></div>
+            <div class="branch-card"><div class="animal">🐂</div><div class="name">丑 (Chou) — Ox</div><div class="sub">Element: Earth · Season: Winter</div></div>
+            <div class="branch-card"><div class="animal">🐅</div><div class="name">寅 (Yin) — Tiger</div><div class="sub">Element: Wood · Season: Spring</div></div>
+            <div class="branch-card"><div class="animal">🐇</div><div class="name">卯 (Mao) — Rabbit</div><div class="sub">Element: Wood · Season: Spring</div></div>
+            <div class="branch-card"><div class="animal">🐉</div><div class="name">辰 (Chen) — Dragon</div><div class="sub">Element: Earth · Season: Spring</div></div>
+            <div class="branch-card"><div class="animal">🐍</div><div class="name">巳 (Si) — Snake</div><div class="sub">Element: Fire · Season: Summer</div></div>
+            <div class="branch-card"><div class="animal">🐴</div><div class="name">午 (Wu) — Horse</div><div class="sub">Element: Fire · Season: Summer</div></div>
+            <div class="branch-card"><div class="animal">🐑</div><div class="name">未 (Wei) — Goat</div><div class="sub">Element: Earth · Season: Summer</div></div>
+            <div class="branch-card"><div class="animal">🐒</div><div class="name">申 (Shen) — Monkey</div><div class="sub">Element: Metal · Season: Autumn</div></div>
+            <div class="branch-card"><div class="animal">🐓</div><div class="name">酉 (You) — Rooster</div><div class="sub">Element: Metal · Season: Autumn</div></div>
+            <div class="branch-card"><div class="animal">🐕</div><div class="name">戌 (Xu) — Dog</div><div class="sub">Element: Earth · Season: Autumn</div></div>
+            <div class="branch-card"><div class="animal">🐖</div><div class="name">亥 (Hai) — Pig</div><div class="sub">Element: Water · Season: Winter</div></div>
+        </div>
+
+        <div class="ft-center mt-6">
+            <p class="ft-muted" style="margin-bottom:24px;">
+                See which Earthly Branches appear in YOUR BaZi chart.
+            </p>
+            {{ btn("Get Your BaZi Reading — $29.99", href="/input", variant="primary") }}
+        </div>
+    </div>
+</section>
+{% endblock %}

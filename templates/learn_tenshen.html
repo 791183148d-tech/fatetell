@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import btn, badge %}
+{% block title %}The 10 Gods (Shi Shen) — Learn BaZi{% endblock %}
+{% block extra_css %}
+<style>
+    .god-card { padding:24px; border-radius:var(--radius); background:var(--bg3); border:1px solid var(--border); border-left:4px solid; margin-bottom:16px; transition:all 0.3s; }
+    .god-card:hover { transform:translateY(-2px); box-shadow:var(--shadow); }
+    table.god-table { width:100%; border-collapse:collapse; margin:20px 0; }
+    table.god-table th, table.god-table td { padding:12px 16px; text-align:left; border-bottom:1px solid var(--border); }
+    table.god-table th { background:var(--bg4); font-size:0.85rem; text-transform:uppercase; color:var(--text2); }
+    .god-type { display:inline-block; padding:2px 12px; border-radius:20px; font-size:0.75rem; font-weight:600; }
+</style>
+{% endblock %}
+{% block content %}
+<section class="ft-fade-in" style="padding:60px 0;">
+    <div class="container" style="max-width:780px;">
+        <div class="ft-mb-4">
+            <a href="/learn" class="ft-muted" style="text-decoration:none;font-size:0.88rem;">← Back to Learn</a>
+            <div class="ft-section__label" style="margin-top:24px;">BaZi Analysis</div>
+            <h1 class="ft-section__title">The 10 Gods: <span class="gold">Shi Shen</span> (十神)</h1>
+        </div>
+        <p class="ft-muted" style="margin-bottom:32px;line-height:1.8;">
+            The Ten Gods (Shi Shen) are the spiritual influences that govern relationships, career,
+            wealth, and personal expression. They emerge from the interaction between the Day Master
+            and the other seven characters in your BaZi chart.
+        </p>
+
+        <table class="god-table">
+            <thead><tr><th>God</th><th>Chinese</th><th>Type</th><th>Meaning</th></tr></thead>
+            <tbody>
+                <tr><td>Direct Officer</td><td>正官</td><td><span class="god-type" style="background:var(--gold);color:#000;">Positive</span></td><td>Authority, discipline, career success, integrity</td></tr>
+                <tr><td>7 Killings</td><td>七杀</td><td><span class="god-type" style="background:#FF5722;color:#fff;">Negative</span></td><td>Challenge, competition, pressure, transformation</td></tr>
+                <tr><td>Direct Wealth</td><td>正财</td><td><span class="god-type" style="background:var(--gold);color:#000;">Positive</span></td><td>Stable income, financial security, marriage</td></tr>
+                <tr><td>Indirect Wealth</td><td>偏财</td><td><span class="god-type" style="background:#FF5722;color:#fff;">Negative</span></td><td>Speculative gains, risk-taking, charisma</td></tr>
+                <tr><td>Direct Resource</td><td>正印</td><td><span class="god-type" style="background:var(--gold);color:#000;">Positive</span></td><td>Education, support, protection, reputation</td></tr>
+                <tr><td>Indirect Resource</td><td>偏印</td><td><span class="god-type" style="background:#FF5722;color:#fff;">Negative</span></td><td>Unique thinking, spirituality, unconventional wisdom</td></tr>
+                <tr><td>Friend</td><td>比肩</td><td><span class="god-type" style="background:var(--gold);color:#000;">Neutral</span></td><td>Peers, siblings, competition, self-reliance</td></tr>
+                <tr><td>Rob Wealth</td><td>劫财</td><td><span class="god-type" style="background:#FF5722;color:#fff;">Negative</span></td><td>Rivalry, financial loss, giving, sharing</td></tr>
+                <tr><td>Eating God</td><td>食神</td><td><span class="god-type" style="background:var(--gold);color:#000;">Positive</span></td><td>Creativity, talent, expression, happiness</td></tr>
+                <tr><td>Hurting Officer</td><td>伤官</td><td><span class="god-type" style="background:#FF5722;color:#fff;">Negative</span></td><td>Rebellion, innovation, eloquence, arrogance</td></tr>
+            </tbody>
+        </table>
+
+        <div class="ft-center mt-6">
+            <p class="ft-muted" style="margin-bottom:24px;">
+                See which Ten Gods dominate YOUR chart in a full BaZi reading.
+            </p>
+            {{ btn("Get Your BaZi Reading — $29.99", href="/input", variant="primary") }}
+        </div>
+    </div>
+</section>
+{% endblock %}

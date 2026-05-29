@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import section_header, card, badge, btn %}
+{% block title %}Liu Yao (六爻) — I Ching Divination — FateTell{% endblock %}
+{% block meta_desc %}Liu Yao (六爻) — ancient Chinese I Ching coin divination. Toss virtual coins to receive guidance from the 64 hexagrams of the I Ching.{% endblock %}
+
+{% block content %}
+<section class="ft-section" style="padding:60px 0;">
+    <div class="container" style="max-width:720px;">
+        {{ section_header(title='Liu Yao <span class="gold">六爻</span>', label="I Ching Divination",
+                         subtitle="The oldest divination system in Chinese culture — toss three virtual coins six times to generate a hexagram that reveals guidance for your question.") }}
+
+        <!-- Coin Toss Area -->
+        <div class="ft-card ft-card--glow ft-center" style="padding:40px;margin-bottom:32px;">
+            <div id="toss-area">
+                <div style="font-size:1rem;margin-bottom:16px;color:var(--text2);">
+                    Focus on your question, then toss the coins.
+                </div>
+                <button class="ft-btn ft-btn--primary ft-btn--lg" onclick="tossCoins()" id="toss-btn">
+                    🪙 Toss the Coins
+                </button>
+            </div>
+
+            <!-- Coin Animation -->
+            <div id="coin-animation" style="display:none;margin:24px 0;">
+                <div class="coin-container">
+                    <div class="coin" id="coin-1">🪙</div>
+                    <div class="coin" id="coin-2">🪙</div>
+                    <div class="coin" id="coin-3">🪙</div>
+                </div>
+                <div id="toss-result" class="ft-muted" style="margin-top:12px;font-size:0.88rem;"></div>
+            </div>
+
+            <!-- Loading -->
+            <div id="loading-state" style="display:none;">
+                <div class="ft-spinner ft-spinner--md" role="status"></div>
+                <div class="ft-muted" style="margin-top:8px;">Consulting the I Ching...</div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="result-area" style="display:none;">
+            <!-- Hexagram Display -->
+            <div class="ft-card ft-card--glow ft-center" style="padding:36px;margin-bottom:24px;">
+                <div id="hexagram-lines" style="font-size:2.8rem;line-height:1.6;letter-spacing:4px;font-weight:200;font-family:serif;"></div>
+                <div style="margin-top:16px;">
+                    <div style="font-size:1.5rem;font-weight:700;color:var(--gold-light);font-family:var(--font-display);">
+                        <span id="hexagram-num"></span>. <span id="hexagram-name"></span>
+                    </div>
+                    <div style="font-size:0.95rem;color:var(--gold);" id="hexagram-english"></div>
+                </div>
+                <div class="ft-tag" style="margin-top:12px;">
+                    Upper: <span id="upper-trigram"></span> · Lower: <span id="lower-trigram"></span>
+                </div>
+            </div>
+
+            <!-- Hexagram Info -->
+            <div class="ft-card" style="padding:28px;margin-bottom:24px;">
+                <h3 style="font-size:1rem;margin-bottom:12px;">📜 Judgement</h3>
+                <p id="hexagram-judgement" style="color:var(--text2);line-height:1.8;font-size:0.95rem;"></p>
+            </div>
+
+            <!-- Line Interpretations -->
+            <div id="line-details" style="margin-bottom:24px;">
+                <h3 style="font-size:1rem;margin-bottom:16px;">🔮 Line Interpretations</h3>
+                <div id="line-cards"></div>
+            </div>
+
+            <!-- Changing Hexagram (if applicable) -->
+            <div id="changed-hexagram" style="display:none;margin-bottom:24px;">
+                <div class="ft-card ft-card--glow" style="padding:28px;">
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                        <span style="font-size:1.5rem;">🔄</span>
+                        <h3 style="font-size:1rem;">Transformed Hexagram</h3>
+                    </div>
+                    <div style="font-size:1.5rem;font-weight:700;color:var(--gold-light);font-family:var(--font-display);">
+                        <span id="changed-num"></span>. <span id="changed-name"></span> — <span id="changed-english"></span>
+                    </div>
+                    <div id="changed-lines" style="font-size:2rem;line-height:1.6;letter-spacing:6px;margin-top:12px;"></div>
+                    <p id="changed-judgement" class="ft-muted" style="margin-top:12px;font-size:0.9rem;"></p>
+                </div>
+            </div>
+
+            <div class="ft-center">
+                {{ btn("Toss Again", href="/liuyao", variant="outline", size="md") }}
+            </div>
+        </div>
+
+        <!-- Info about Liu Yao -->
+        <div class="ft-card" style="padding:24px;margin-top:32px;">
+            <h3 style="font-size:1rem;margin-bottom:12px;">📖 About Liu Yao (六爻)</h3>
+            <p class="ft-muted" style="font-size:0.88rem;line-height:1.7;">
+                Liu Yao — "Six Lines" — is a method of I Ching divination using three coins tossed six times.
+                Each toss produces a Yin (broken) or Yang (solid) line. The six lines build a hexagram from
+                the bottom up, creating one of 64 possible archetypal situations. Lines that land as
+                "old yin" (three tails) or "old yang" (three heads) are <em>changing lines</em> — they
+                transform into their opposite, producing a second hexagram that shows the direction of change.
+            </p>
+        </div>
+    </div>
+</section>
+
+{% block extra_css %}
+<style>
+.coin-container {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    font-size: 3.5rem;
+}
+.coin {
+    animation: coin-spin 0.6s ease-out;
+}
+@keyframes coin-spin {
+    0% { transform: rotateY(0deg) scale(1); }
+    50% { transform: rotateY(540deg) scale(1.2); }
+    100% { transform: rotateY(720deg) scale(1); }
+}
+.coin:nth-child(2) { animation-delay: 0.1s; }
+.coin:nth-child(3) { animation-delay: 0.2s; }
+
+.line-changing {
+    color: var(--gold-light) !important;
+    text-shadow: 0 0 12px rgba(201,168,76,0.3);
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function tossCoins() {
+    const btn = document.getElementById('toss-btn');
+    const tossArea = document.getElementById('toss-area');
+    const animDiv = document.getElementById('coin-animation');
+    const loadingDiv = document.getElementById('loading-state');
+    const resultArea = document.getElementById('result-area');
+
+    // Hide toss button, show animation
+    tossArea.style.display = 'none';
+    animDiv.style.display = 'block';
+    loadingDiv.style.display = 'none';
+
+    // Re-trigger animation by recreating coins
+    const coins = document.querySelectorAll('.coin');
+    coins.forEach(c => {
+        c.style.animation = 'none';
+        c.offsetHeight; // force reflow
+        c.style.animation = '';
+    });
+
+    document.getElementById('toss-result').textContent = 'Tossing coins...';
+
+    // Call API
+    try {
+        const resp = await fetch('/api/liuyao/toss');
+        const data = await resp.json();
+
+        loadingDiv.style.display = 'none';
+        animDiv.style.display = 'none';
+
+        if (data.success) {
+            displayReading(data.data);
+            resultArea.style.display = 'block';
+        } else {
+            document.getElementById('toss-result').textContent = 'Error: ' + data.error;
+            tossArea.style.display = 'block';
+        }
+    } catch (e) {
+        loadingDiv.style.display = 'none';
+        document.getElementById('toss-result').textContent = 'Network error. Please try again.';
+        tossArea.style.display = 'block';
+    }
+}
+
+function displayReading(reading) {
+    // Hexagram lines
+    const symbols = reading.line_symbols.map((s, i) => {
+        const isChanging = reading.changing_lines.includes(i);
+        return `<div class="${isChanging ? 'line-changing' : ''}" style="padding:2px 0;">${s}</div>`;
+    }).join('');
+
+    // Display from top to bottom (reverse)
+    document.getElementById('hexagram-lines').innerHTML = symbols.split('').reverse().join('');
+
+    // Hexagram info
+    document.getElementById('hexagram-num').textContent = reading.hexagram.num;
+    document.getElementById('hexagram-name').textContent = reading.hexagram.name + ' (' + reading.hexagram.english + ')';
+    document.getElementById('hexagram-english').textContent = reading.hexagram.english;
+    document.getElementById('upper-trigram').textContent = reading.upper_trigram.info.symbol + ' ' + reading.upper_trigram.name + ' (' + reading.upper_trigram.info.nature + ')';
+    document.getElementById('lower-trigram').textContent = reading.lower_trigram.info.symbol + ' ' + reading.lower_trigram.name + ' (' + reading.lower_trigram.info.nature + ')';
+    document.getElementById('hexagram-judgement').textContent = reading.hexagram.judgement;
+
+    // Line interpretations
+    const lineContainer = document.getElementById('line-cards');
+    lineContainer.innerHTML = '';
+
+    // Display top to bottom (reverse of data stored bottom-to-top)
+    const reversed = [...reading.line_texts].reverse();
+    reversed.forEach(line => {
+        const card = document.createElement('div');
+        card.className = 'ft-card';
+        card.style.cssText = 'padding:14px 18px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px;';
+
+        const isChanging = reading.changing_lines.includes(line.position - 1);
+        card.style.borderColor = isChanging ? 'rgba(201,168,76,0.3)' : 'var(--border)';
+
+        card.innerHTML = `
+            <div style="font-size:1.3rem;font-family:serif;min-width:36px;text-align:center;color:${isChanging ? 'var(--gold-light)' : 'var(--text2)'};">${line.symbol}</div>
+            <div style="flex:1;">
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <strong style="font-size:0.9rem;">Line ${line.position}</strong>
+                    <span class="ft-tag" style="font-size:0.7rem;background:${isChanging ? 'rgba(201,168,76,0.1)' : 'var(--bg3)'};">${isChanging ? 'Changing' : line.nature}</span>
+                    <span class="ft-tag" style="font-size:0.7rem;">${line.yinyang}</span>
+                </div>
+                <div style="font-size:0.82rem;color:var(--text3);">${line.place}</div>
+                <div style="font-size:0.88rem;color:var(--text2);margin-top:4px;">${line.advice}</div>
+            </div>
+        `;
+        lineContainer.appendChild(card);
+    });
+
+    // Changing hexagram
+    if (reading.changed_hexagram) {
+        const ch = document.getElementById('changed-hexagram');
+        ch.style.display = 'block';
+        document.getElementById('changed-num').textContent = reading.changed_hexagram.num;
+        document.getElementById('changed-name').textContent = reading.changed_hexagram.name;
+        document.getElementById('changed-english').textContent = reading.changed_hexagram.english;
+
+        // Changed hexagram lines
+        const changedLines = reading.changed_hexagram.num === reading.hexagram.num
+            ? reading.line_symbols
+            : reading.line_symbols.map(s => s === '———' ? '- -' : '———');
+        document.getElementById('changed-lines').innerHTML = changedLines.reverse().map(s => `<span>${s}</span>`).join('<br>');
+        document.getElementById('changed-judgement').textContent = reading.changed_hexagram.judgement;
+    }
+}
+</script>
+{% endblock %}
+{% endblock %}

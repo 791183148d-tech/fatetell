@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import section_header, card %}
+{% block title %}Learn BaZi — FateTell{% endblock %}
+
+{% block content %}
+<section class="ft-fade-in" style="padding:60px 0 40px;">
+    <div class="container" style="max-width:800px;">
+        {{ section_header(title='Learn <span class="gold">BaZi</span> — The Four Pillars of Destiny', label="Education", subtitle='BaZi is a 2,000-year-old Chinese metaphysical system that maps your life\'s potential through the interaction of five elements, ten heavenly stems, and twelve earthly branches.') }}
+
+        <div class="ft-card" style="padding:32px;margin-bottom:48px;">
+            <h2 class="ft-section__title" style="font-size:1.5rem;margin-bottom:16px;">What is BaZi?</h2>
+            <p class="ft-muted" style="margin-bottom:12px;line-height:1.8;">
+                BaZi (八字) literally means "Eight Characters" — the eight Chinese characters that represent
+                your birth moment: year, month, day, and hour. Each of these four pillars consists of a
+                Heavenly Stem (天干) and an Earthly Branch (地支), creating a unique energetic blueprint.
+            </p>
+            <p class="ft-muted" style="margin-bottom:12px;line-height:1.8;">
+                Think of BaZi as a <strong>cosmic user manual</strong>. It doesn't predict a fixed destiny,
+                but reveals your natural tendencies, strengths, challenges, and the best timing for different
+                life pursuits. It answers questions like:
+            </p>
+            <ul class="ft-muted" style="padding-left:20px;line-height:2;">
+                <li>What are my natural talents and how should I develop them?</li>
+                <li>Why do I click with some people and clash with others?</li>
+                <li>When is the right time for a career change, marriage, or major investment?</li>
+                <li>What life lessons will each decade bring?</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="ft-section ft-section--alt">
+    <div class="container">
+        {{ section_header(title='Explore BaZi <span class="gold">Topics</span>', label="Topics", divider=True) }}
+        <div class="grid-3">
+            <a href="/learn/wuxing" class="ft-card ft-card--interactive">
+                <div class="ft-card__icon" aria-hidden="true">🌳🔥⛰️⚔️🌊</div>
+                <h3 class="ft-card__title">The Five Elements (Wu Xing)</h3>
+                <p class="ft-card__body">Wood, Fire, Earth, Metal, Water — the fundamental energies that shape your personality and life patterns. Understand their interactions and your personal element combination.</p>
+            </a>
+            <a href="/learn/stems" class="ft-card ft-card--interactive">
+                <div class="ft-card__icon" aria-hidden="true">☯️</div>
+                <h3 class="ft-card__title">The 10 Heavenly Stems</h3>
+                <p class="ft-card__body">The celestial energies that combine with the Five Elements to create 10 distinct archetypes. Each stem represents a specific personality blueprint.</p>
+            </a>
+            <a href="/learn/branches" class="ft-card ft-card--interactive">
+                <div class="ft-card__icon" aria-hidden="true">🐀🐂🐅🐇</div>
+                <h3 class="ft-card__title">The 12 Earthly Branches</h3>
+                <p class="ft-card__body">The earthly energies that govern timing, seasons, and the Chinese zodiac. Each branch carries its own element, animal, and characteristics.</p>
+            </a>
+            <a href="/learn/zodiac" class="ft-card ft-card--interactive">
+                <div class="ft-card__icon" aria-hidden="true">🐉🐍🐴🐑</div>
+                <h3 class="ft-card__title">Chinese Zodiac Animals</h3>
+                <p class="ft-card__body">Deep dive into each of the 12 zodiac animals — their personalities, compatibility, and 2026 forecast for the Year of the Horse.</p>
+            </a>
+            <a href="/learn/tenshen" class="ft-card ft-card--interactive">
+                <div class="ft-card__icon" aria-hidden="true">👥</div>
+                <h3 class="ft-card__title">The Ten Gods (Shi Shen)</h3>
+                <p class="ft-card__body">The ten spiritual influences that govern relationships, career, wealth, and personal expression. Understand how they shape your life narrative.</p>
+            </a>
+            <a href="/learn/dayun" class="ft-card ft-card--interactive">
+                <div class="ft-card__icon" aria-hidden="true">🗺️</div>
+                <h3 class="ft-card__title">Da Yun — Life Cycles</h3>
+                <p class="ft-card__body">The 10-year chapters of your life. Each cycle brings different energies and opportunities. Learn how to work with your current cycle.</p>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

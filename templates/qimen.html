@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import section_header, card, badge, btn, btn_submit, alert, input, select, form_row %}
+{% block title %}Qimen Dunjia — FateTell{% endblock %}
+{% block meta_desc %}Qimen Dunjia (奇门遁甲) — ancient Chinese metaphysical divination system for choosing auspicious timing and directions.{% endblock %}
+
+{% block content %}
+<section class="ft-section" style="padding:60px 0;">
+    <div class="container" style="max-width:800px;">
+        {{ section_header(title='Qimen <span class="gold">Dunjia</span>', label="奇门遁甲",
+                         subtitle="The highest level of Chinese metaphysics — a four-dimensional map of time and space. Discover auspicious directions and timing for any activity.") }}
+
+        {% if error %}
+        {{ alert(message=error, type="error") }}
+        {% endif %}
+
+        <!-- Query Form -->
+        <div class="ft-card ft-card--glow" style="padding:36px;margin-bottom:40px;">
+            <h3 style="font-size:1.1rem;margin-bottom:20px;">Select Date &amp; Time</h3>
+            <form method="POST" action="/qimen">
+                {% call form_row() %}
+                    {{ select(name="year", label="Year", options=make_opts(2030, 1900, -1), value=request.form.get('year', ''), required=True) }}
+                    {{ select(name="month", label="Month", options=make_opts(1, 13), value=request.form.get('month', ''), required=True) }}
+                {% endcall %}
+                {% call form_row() %}
+                    {{ select(name="day", label="Day", options=make_opts(1, 32), value=request.form.get('day', ''), required=True) }}
+                    {{ select(name="hour", label="Hour (24h)", options=make_opts(0, 24, 1, "{:02d}:00"), value=request.form.get('hour', 12)) }}
+                {% endcall %}
+                <div style="margin-top:24px;">
+                    {{ btn_submit(text="Calculate Qimen Chart", variant="primary", size="lg") }}
+                </div>
+            </form>
+        </div>
+
+        {% if chart %}
+        <!-- CHART RESULTS -->
+        {% set c = chart %}
+
+        <!-- Summary Banner -->
+        <div class="ft-card ft-card--glow" style="padding:24px;margin-bottom:32px;">
+            <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;">
+                <div>
+                    <div class="ft-muted" style="font-size:0.82rem;">{{ c.datetime }}</div>
+                    <div style="font-size:1.3rem;font-weight:600;margin:4px 0;">
+                        {{ c.yin_yang }} {{ c.ju_number }}局 · {{ c.yuan }}
+                    </div>
+                    <div class="ft-muted">Solar Term: {{ c.solar_term }} · Prev Qi: {{ c.prev_qi }} · Next Jie: {{ c.next_jie }}</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:2rem;font-weight:700;color:var(--gold-light);font-family:var(--font-display);">{{ c.day_gan_zhi }} {{ c.hour_gan_zhi }}</div>
+                    <div class="ft-tag" style="margin-top:4px;">旬首 {{ c.xun_shou }} · 值符 {{ c.leader_stem }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nine Palaces Grid -->
+        <h3 class="ft-section__title" style="font-size:1.4rem;margin-bottom:24px;">Nine Palaces <span class="gold">九宫</span></h3>
+        <div class="qimen-grid">
+            {% set luo_shu_order = [4, 9, 2, 3, 5, 7, 8, 1, 6] %}
+            {% for ls_num in luo_shu_order %}
+                {% set p = c.nine_palaces | selectattr("palace_number", "equalto", ls_num) | first %}
+                {% if p %}
+                <div class="qimen-palace {% if p.palace_number == 5 %}qimen-palace--center{% endif %}">
+                    <div class="qimen-palace__header">
+                        <span class="qimen-palace__name">{{ p.name }}</span>
+                        <span class="qimen-palace__dir">{{ p.direction }}</span>
+                    </div>
+                    {% if p.palace_number != 5 %}
+                    <div class="qimen-palace__stems">
+                        <div style="display:flex;justify-content:space-between;">
+                            <span title="Earth (地盘)">{{ p.earth_stem }}</span>
+                            <span title="Heaven (天盘)">{{ p.heaven_stem }}</span>
+                        </div>
+                    </div>
+                    <div class="qimen-palace__door {% if p.door and p.door.good %}door-good{% else %}door-bad{% endif %}">
+                        {% if p.door %}{{ p.door.name }} {{ p.door.english }}{% endif %}
+                    </div>
+                    <div class="qimen-palace__star">
+                        {% if p.star %}{{ p.star.name }}{% endif %}
+                    </div>
+                    <div class="qimen-palace__god {% if p.god and p.god.good %}god-good{% else %}god-bad{% endif %}">
+                        {% if p.god %}{{ p.god.name }} {{ p.god.english }}{% endif %}
+                    </div>
+                    {% else %}
+                    <div class="qimen-palace__center-content">
+                        <div>中宫</div>
+                        <div style="font-size:0.78rem;">{{ p.earth_stem }} · {{ p.heaven_stem }}</div>
+                        {% if p.star %}
+                        <div style="font-size:0.75rem;">{{ p.star.english }}</div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Analysis -->
+        {% set analysis = c.analysis %}
+        <div style="margin-top:40px;">
+            <div class="ft-card ft-card--glow" style="padding:28px;margin-bottom:24px;">
+                <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+                    <div style="font-size:2.5rem;font-weight:700;color:{% if analysis.score >= 70 %}var(--gold-light){% elif analysis.score >= 40 %}var(--gold){% else %}var(--accent){% endif %};">
+                        {{ analysis.score }}%
+                    </div>
+                    <div>
+                        <div style="font-weight:600;font-size:1.1rem;">Overall Auspiciousness</div>
+                        <div class="ft-muted">{{ analysis.summary }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auspicious Directions -->
+        {% if analysis.auspicious_directions %}
+        <div style="margin-bottom:24px;">
+            <h3 style="font-size:1.1rem;margin-bottom:16px;">{% if c.yin_yang_type == 'yang' %}✅{% else %}✅{% endif %} Auspicious Directions</h3>
+            <div class="grid-4">
+                {% for d in analysis.auspicious_directions %}
+                <div class="ft-card" style="padding:20px;text-align:center;border-color:rgba(76,175,80,0.2);">
+                    <div style="font-size:1.5rem;font-weight:700;color:#4CAF50;">{{ d.direction }}</div>
+                    <div style="font-size:0.88rem;margin:8px 0;">{{ d.palace }} Palace</div>
+                    <div style="font-size:0.82rem;color:var(--text2);">{{ d.door }} Door</div>
+                    {% if d.star %}<div style="font-size:0.78rem;color:var(--text3);">{{ d.star }}</div>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Inauspicious Directions -->
+        {% if analysis.inauspicious_directions %}
+        <div style="margin-bottom:32px;">
+            <h3 style="font-size:1.1rem;margin-bottom:16px;">⚠️ Avoid Directions</h3>
+            <div class="grid-4">
+                {% for d in analysis.inauspicious_directions %}
+                <div class="ft-card" style="padding:16px;text-align:center;border-color:rgba(244,67,54,0.15);">
+                    <div style="font-size:1.3rem;font-weight:600;color:#f44336;">{{ d.direction }}</div>
+                    <div style="font-size:0.82rem;color:var(--text3);">{{ d.palace }} · {{ d.door }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Detailed Findings -->
+        <details style="margin-bottom:24px;">
+            <summary style="cursor:pointer;font-weight:600;padding:12px 0;color:var(--gold);">Detailed Chart Analysis ({{ analysis.findings | length }} items)</summary>
+            <div style="margin-top:12px;">
+                {% for f in analysis.findings %}
+                <div class="ft-card" style="padding:16px;margin-bottom:8px;border-color:{% if f.type == 'excellent' %}rgba(201,168,76,0.3){% elif f.type == 'auspicious' %}rgba(76,175,80,0.15){% else %}rgba(244,67,54,0.1){% endif %};">
+                    <div style="display:flex;align-items:flex-start;gap:12px;">
+                        <span style="font-size:1.1rem;">{% if f.type == 'excellent' %}⭐{% elif f.type == 'auspicious' %}✅{% else %}⚠️{% endif %}</span>
+                        <div>
+                            <div style="font-weight:600;font-size:0.92rem;">{{ f.item }}</div>
+                            <div class="ft-muted" style="font-size:0.82rem;">{{ f.location }}</div>
+                            <div style="font-size:0.85rem;margin-top:4px;">{{ f.detail }}</div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </details>
+
+        <!-- New Query -->
+        <div class="ft-center" style="margin-top:32px;">
+            {{ btn("New Qimen Query", href="/qimen", variant="outline", size="md") }}
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% block extra_css %}
+<style>
+/* Qimen Grid: 3×3 layout using CSS Grid */
+.qimen-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    max-width: 780px;
+    margin: 0 auto 32px;
+    background: rgba(201,168,76,0.04);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px;
+}
+.qimen-palace {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 8px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.qimen-palace--center {
+    background: rgba(201,168,76,0.04);
+    border-color: rgba(201,168,76,0.12);
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;
+}
+.qimen-palace__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+}
+.qimen-palace__name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--gold);
+}
+.qimen-palace__dir {
+    font-size: 0.72rem;
+    color: var(--text3);
+}
+.qimen-palace__stems {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+.qimen-palace__door {
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+.door-good { color: #4CAF50; }
+.door-bad { color: #f44336; }
+.qimen-palace__star {
+    font-size: 0.75rem;
+    color: var(--text2);
+}
+.qimen-palace__god {
+    font-size: 0.72rem;
+}
+.god-good { color: var(--gold-light); }
+.god-bad { color: #ff7043; }
+.qimen-palace__center-content {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text2);
+}
+@media (max-width:600px) {
+    .qimen-palace { min-height: 90px; padding: 6px; font-size: 0.85rem; }
+    .qimen-palace__stems { font-size: 0.82rem; }
+    .qimen-palace__door { font-size: 0.72rem; }
+}
+</style>
+{% endblock %}
+{% endblock %}

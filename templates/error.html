@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% from "components/_macros.html" import btn %}
+{% block title %}{{ code }} — FateTell{% endblock %}
+{% block content %}
+<section style="padding:120px 0;text-align:center;">
+    <div class="container" style="max-width:500px;">
+        <div class="ft-step-number">{{ code }}</div>
+        <h1 class="ft-section__title" style="font-size:1.8rem;margin:24px 0 12px;">
+            {% if code == 404 %}
+            Page Not Found
+            {% elif code == 500 %}
+            Something Went Wrong
+            {% else %}
+            Oops
+            {% endif %}
+        </h1>
+        <p class="ft-muted" style="margin-bottom:32px;">{{ message }}</p>
+        {{ btn("Return Home", href="/", variant="primary") }}
+    </div>
+</section>
+{% endblock %}
