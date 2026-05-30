@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% from "components/_macros.html" import pricing_card, btn_submit, btn, demo_banner %}
-{% block title %}Checkout — FateTell{% endblock %}
+{% block title %}支付 — FateTell{% endblock %}
 
 {% block content %}
 <section class="ft-fade-in" style="padding:60px 0;">
     <div class="container" style="max-width:500px;">
         <div class="ft-center ft-mb-4">
             <h2 class="ft-section__title" style="font-size:2rem;">
-                Complete Your <span class="gold">Purchase</span>
+                解锁完整 <span class="gold">解读报告</span>
             </h2>
+            <p class="ft-section__sub ft-mx-auto">你的八字命盘已生成，AI 深度解读等你解锁。</p>
         </div>
 
-        <!-- stripe_key raw: {{ stripe_key }} -->
         {% if error %}
         <div style="background:rgba(255,71,87,0.1);border:1px solid rgba(255,71,87,0.3);border-radius:8px;padding:16px;margin-bottom:24px;color:#ff4757;font-size:0.9rem;">
             {{ error }}
@@ -21,20 +21,20 @@
         {% if stripe_key %}
         {{ pricing_card(
             price="$%.2f" % price,
-            desc="Full BaZi Life Reading Report · 10,000+ words",
-            cta_text="Pay with Credit Card",
-            footer="🔒 Secure checkout · Instant delivery · 7-day money-back guarantee",
+            desc="完整八字命理报告 · AI 万字深度解读",
+            cta_text="信用卡支付",
+            footer="🔒 安全支付 · 即时交付 · 7 天无理由退款",
             children='<input type="hidden" name="order_id" value="' ~ order_id ~ '">'
         ) }}
         <form action="/create-checkout-session" method="POST">
             <input type="hidden" name="order_id" value="{{ order_id }}">
-            {{ btn_submit("Pay with Credit Card", size="full") }}
+            {{ btn_submit("信用卡支付 $%.2f" % price, size="full") }}
         </form>
         {% else %}
         {{ demo_banner() }}
-        {{ btn("View Full Report (Demo)", href="/payment/success", variant="primary", size="full") }}
+        {{ btn("查看完整报告 (演示模式)", href="/payment/success", variant="primary", size="full") }}
         <p class="ft-muted ft-center" style="margin-top:24px;font-size:0.8rem;">
-            🔒 Secure checkout · Instant delivery · 7-day money-back guarantee
+            🔒 安全支付 · 即时交付 · 7 天无理由退款
         </p>
         {% endif %}
     </div>

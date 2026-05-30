@@ -63,8 +63,8 @@ def debug_test_stripe():
     result = stripe_service.create_checkout_session(
         order_id="test-debug-001",
         price_cents=price_cents(),
-        success_url="https://fatetell-3c2x.onrender.com/payment/success",
-        cancel_url="https://fatetell-3c2x.onrender.com/payment/cancelled",
+        success_url=settings.site_url.rstrip("/") + "/payment/success",
+        cancel_url=settings.site_url.rstrip("/") + "/payment/cancelled",
     )
     return {
         "has_error": bool(result.error),

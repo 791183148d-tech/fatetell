@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}FateTell — AI BaZi Reading{% endblock %}</title>
-    <meta name="description" content="{% block meta_desc %}东方古老智慧的结晶 — AI 驱动的八字命理、奇门遁甲、手相分析与姓名学。{% endblock %}">
+    <title>{% block title %}FateTell — AI 八字命理分析{% endblock %}</title>
+    <meta name="description" content="{% block meta_desc %}免费八字排盘，AI 深度解读你的命运蓝图。四柱八字、五行十神、大运流年，一键生成。{% endblock %}">
     <link rel="icon" href="/static/favicon.ico" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
@@ -140,7 +140,7 @@
 </head>
 <body>
     <!-- Skip-to-content link for keyboard users -->
-    <a href="#main-content" class="skip-link">Skip to content</a>
+    <a href="#main-content" class="skip-link">跳到内容</a>
 
     <!-- Ambient background orbs -->
     <div class="ambient-orbs" aria-hidden="true">
@@ -152,25 +152,26 @@
     <nav role="navigation" aria-label="Main navigation">
         <div class="container">
             <a href="/" class="logo">Fate<span>Tell</span></a>
-            <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Open navigation menu" aria-controls="nav-menu">☰</button>
+            <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="打开导航" aria-controls="nav-menu">☰</button>
             <div class="nav-links" id="nav-menu" data-nav-menu>
-                <a href="/">Home</a>
-                <a href="/learn">Learn BaZi</a>
-                <a href="/qimen">Qimen Dunjia</a>
-                <a href="/liuyao">I Ching</a>
-                <a href="/palm">Palm Reading</a>
-                <a href="/name-analysis">Name Analysis</a>
-                <a href="/daily">Daily</a>
-                <a href="/zodiac">Zodiac 2026</a>
-                <a href="/compatibility">Compatibility</a>
-                <a href="/about">About</a>
+                <a href="/">首页</a>
+                <a href="/input">免费排盘</a>
+                <a href="/learn">八字学习</a>
+                <a href="/qimen">奇门遁甲</a>
+                <a href="/liuyao">六爻占卜</a>
+                <a href="/palm">手相分析</a>
+                <a href="/name-analysis">姓名学</a>
+                <a href="/daily">每日八字</a>
+                <a href="/zodiac">2026 生肖</a>
+                <a href="/compatibility">合婚配对</a>
+                <a href="/about">关于</a>
                 <div class="nav-auth">
                     {% if session.user_id %}
                     <a href="/account" class="nav-acct">👤 {{ session.user_name or session.user_email }}</a>
-                    <a href="/logout" style="font-size:0.82rem;color:var(--text3);">Logout</a>
+                    <a href="/logout" style="font-size:0.82rem;color:var(--text3);">退出</a>
                     {% else %}
-                    <a href="/login">Log In</a>
-                    <a href="/input" class="nav-cta">Get Your Reading</a>
+                    <a href="/login">登录</a>
+                    <a href="/input" class="nav-cta">免费排盘</a>
                     {% endif %}
                 </div>
             </div>
@@ -191,36 +192,36 @@
                 <div>
                     <div class="footer-brand">Fate<span>Tell</span></div>
                     <p style="color:var(--text2);font-size:0.88rem;margin-top:12px;line-height:1.7;">
-                        东方古老智慧的结晶 —— AI 为你解读八字、奇门遁甲、手相与姓名奥秘。
+                        AI 驱动 · 免费八字排盘 · 深度命理分析
                     </p>
                 </div>
                 <div>
-                    <h4>Services</h4>
-                    <a href="/input">BaZi Reading</a>
-                    <a href="/compatibility">Compatibility Check</a>
-                    <a href="/qimen">Qimen Dunjia</a>
-                    <a href="/palm">Palm Reading</a>
-                    <a href="/liuyao">I Ching Divination</a>
-                    <a href="/name-analysis">Name Analysis</a>
-                    <a href="/daily">Daily BaZi</a>
-                    <a href="/zodiac">2026 Zodiac Forecast</a>
+                    <h4>服务</h4>
+                    <a href="/input">八字排盘</a>
+                    <a href="/compatibility">合婚配对</a>
+                    <a href="/qimen">奇门遁甲</a>
+                    <a href="/palm">手相分析</a>
+                    <a href="/liuyao">六爻占卜</a>
+                    <a href="/name-analysis">姓名分析</a>
+                    <a href="/daily">每日八字</a>
+                    <a href="/zodiac">2026 生肖运势</a>
                 </div>
                 <div>
-                    <h4>Learn</h4>
-                    <a href="/learn">What is BaZi</a>
-                    <a href="/learn/wuxing">Five Elements</a>
-                    <a href="/learn/zodiac">Zodiac Animals</a>
-                    <a href="/learn/stems">Heavenly Stems</a>
+                    <h4>学习</h4>
+                    <a href="/learn">什么是八字</a>
+                    <a href="/learn/wuxing">五行学说</a>
+                    <a href="/learn/zodiac">生肖知识</a>
+                    <a href="/learn/stems">天干地支</a>
                 </div>
                 <div>
-                    <h4>Company</h4>
-                    <a href="/about">About Us</a>
-                    <a href="/about#contact">Contact</a>
-                    <a href="/about#privacy">Privacy</a>
+                    <h4>公司</h4>
+                    <a href="/about">关于我们</a>
+                    <a href="/about#contact">联系我们</a>
+                    <a href="/about#privacy">隐私政策</a>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 FateTell. All rights reserved. | BaZi wisdom for the modern world.</p>
+                <p>&copy; 2026 FateTell. All rights reserved. | AI 八字命理，洞悉人生蓝图。</p>
             </div>
         </div>
     </footer>

@@ -1,19 +1,20 @@
 {% extends "base.html" %}
 {% from "components/_macros.html" import section_header, pillar_box, day_master_card, wuxing_grid, da_yun_list, btn, card, badge %}
-{% block title %}Your BaZi Preview — FateTell{% endblock %}
+{% block title %}免费八字排盘 — FateTell{% endblock %}
 
 {% block content %}
 <section class="ft-fade-in" style="padding:40px 0;">
     <div class="container" style="max-width:700px;">
         <div class="ft-center ft-mb-4">
+            <div class="ft-tag" style="margin-bottom:12px;">🆓 免费排盘结果</div>
             <h2 class="ft-section__title" style="font-size:2rem;">
-                Your BaZi Chart, <span class="gold">{{ name }}</span>
+                {{ name }} 的 <span class="gold">八字命盘</span>
             </h2>
-            <p class="ft-section__sub ft-mx-auto">Born {{ bazi.birth_date }} · {{ bazi.gender }} · Zodiac: {{ zodiac }}</p>
+            <p class="ft-section__sub ft-mx-auto">出生 {{ bazi.birth_date }} · {{ bazi.gender }} · 生肖: {{ zodiac }}</p>
         </div>
 
         <!-- Four Pillars -->
-        {{ section_header(title="Your Four Pillars", divider=False) }}
+        {{ section_header(title="四柱八字", label="免费", divider=False) }}
         <div class="ft-pillar-grid">
             {% for pname in ["year", "month", "day", "time"] %}
             {{ pillar_box(pillar=bazi.four_pillars[pname], label=pname) }}
@@ -26,21 +27,27 @@
         </div>
 
         <!-- Five Elements -->
-        {{ section_header(title="Five Elements Balance", divider=False) }}
+        {{ section_header(title="五行平衡", label="免费", divider=False) }}
         {{ wuxing_grid(wuxing_count=bazi.wuxing.count) }}
 
         <!-- Da Yun -->
-        {{ section_header(title="Life Cycles (Da Yun)", divider=False) }}
+        {{ section_header(title="大运排盘", label="免费", divider=False) }}
         {{ da_yun_list(cycles=bazi.da_yun.cycles) }}
 
-        <!-- CTA -->
-        <div class="ft-cta ft-center mt-6">
-            <h2 class="ft-cta__title">Unlock Your <span class="gold">Full BaZi Report</span></h2>
-            <p class="ft-cta__text">
-                Your chart is calculated. Now get the complete 10,000+ word interpretation —
-                personality analysis, career guidance, relationship insights, life timing, and your 2026 forecast.
+        <!-- CTA: Unlock Full Report -->
+        <div class="ft-cta ft-center mt-6" style="border:2px solid rgba(201,168,76,0.3);border-radius:16px;padding:48px 32px;background:linear-gradient(135deg, rgba(201,168,76,0.05), transparent);">
+            <h2 class="ft-cta__title" style="font-size:1.8rem;">解锁 <span class="gold">完整深度解读</span></h2>
+            <p class="ft-cta__text" style="max-width:500px;margin:16px auto;">
+                命盘已出。AI 万字深度报告包含：性格分析、事业财运、感情婚姻、大运流年、2026 年运势。
             </p>
-            {{ btn("Get Full Report — $%.2f" % price, href="/checkout/" ~ order_id, variant="primary", size="lg") }}
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:24px 0;">
+                <span style="font-size:0.9rem;color:var(--text2);">✓ 性格特质</span>
+                <span style="font-size:0.9rem;color:var(--text2);">✓ 事业财运</span>
+                <span style="font-size:0.9rem;color:var(--text2);">✓ 感情婚姻</span>
+                <span style="font-size:0.9rem;color:var(--text2);">✓ 大运流年</span>
+                <span style="font-size:0.9rem;color:var(--text2);">✓ 2026 运势</span>
+            </div>
+            {{ btn("解锁完整报告 — $%.2f" % price, href="/checkout/" ~ order_id, variant="primary", size="lg") }}
         </div>
     </div>
 </section>

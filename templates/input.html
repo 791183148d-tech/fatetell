@@ -1,15 +1,16 @@
 {% extends "base.html" %}
 {% from "components/_macros.html" import input, select, form_row, btn_submit, alert, modal, tooltip_attrs %}
-{% block title %}Get Your BaZi Reading — FateTell{% endblock %}
+{% block title %}免费八字排盘 — FateTell{% endblock %}
 
 {% block content %}
 <section class="ft-fade-in" style="padding:60px 0;">
     <div class="container" style="max-width:550px;">
         <div class="ft-center ft-mb-4">
+            <div class="ft-tag" style="margin-bottom:12px;">🆓 完全免费</div>
             <h2 class="ft-section__title" style="font-size:2rem;">
-                Enter Your <span class="gold">Birth Information</span>
+                输入出生 <span class="gold">信息</span>
             </h2>
-            <p class="ft-section__sub ft-mx-auto">The exact time makes a difference. If you don't know it, select 12:00 PM.</p>
+            <p class="ft-section__sub ft-mx-auto">精确到小时效果最佳。不知道具体时间选 12:00 即可，仍可获得 80% 的解读价值。</p>
         </div>
 
         {% if error %}
@@ -17,39 +18,39 @@
         {% endif %}
 
         <form method="POST" action="/preview" data-validate>
-            {{ input(name="name", label="Your Name", placeholder="Enter your name", value=request.form.get('name', ''), required=True) }}
+            {{ input(name="name", label="你的称呼", placeholder="输入你的名字或昵称", value=request.form.get('name', ''), required=True) }}
 
             {% call form_row() %}
-                {{ select(name="year", label="Year", options=make_opts(2026, 1949, -1), value=request.form.get('year', ''), required=True) }}
-                {{ select(name="month", label="Month", options=make_opts(1, 13), value=request.form.get('month', ''), required=True) }}
+                {{ select(name="year", label="出生年", options=make_opts(2026, 1949, -1), value=request.form.get('year', ''), required=True) }}
+                {{ select(name="month", label="月", options=make_opts(1, 13), value=request.form.get('month', ''), required=True) }}
             {% endcall %}
 
             {% call form_row() %}
-                {{ select(name="day", label="Day", options=make_opts(1, 32), value=request.form.get('day', ''), required=True) }}
-                {{ select(name="hour", label="Hour (24h)", options=make_opts(0, 24, 1, "{:02d}:00"), value=request.form.get('hour', 12)) }}
+                {{ select(name="day", label="日", options=make_opts(1, 32), value=request.form.get('day', ''), required=True) }}
+                {{ select(name="hour", label="时 (24小时制)", options=make_opts(0, 24, 1, "{:02d}:00"), value=request.form.get('hour', 12)) }}
             {% endcall %}
 
             {% call form_row() %}
-                {{ select(name="minute", label="Minute", options=[0, 15, 30, 45], value=request.form.get('minute', '')) }}
-                {{ select(name="gender", label="Gender", options=[("male","Male"), ("female","Female")], value=request.form.get('gender', 'male')) }}
+                {{ select(name="minute", label="分", options=[0, 15, 30, 45], value=request.form.get('minute', '')) }}
+                {{ select(name="gender", label="性别", options=[("male","男"), ("female","女")], value=request.form.get('gender', 'male')) }}
             {% endcall %}
 
-            {{ btn_submit("Calculate My BaZi Chart — Free Preview", size="full") }}
+            {{ btn_submit("免费排盘", size="full") }}
 
             <p class="ft-muted ft-center" style="margin-top:24px;font-size:0.85rem;">
-                Your data is private and never shared.
-                <button type="button" class="ft-btn ft-btn--ghost ft-btn--sm" data-modal-open="privacy-modal" {{ tooltip_attrs("Click to read our privacy policy") }}>Privacy Policy</button>
+                你的数据仅用于生成命盘，不会分享给第三方。
+                <button type="button" class="ft-btn ft-btn--ghost ft-btn--sm" data-modal-open="privacy-modal" {{ tooltip_attrs("点击查看隐私政策") }}>隐私政策</button>
             </p>
         </form>
     </div>
 </section>
 
-{# ── Privacy Modal (usage example) ───────────────────────────────────── #}
+{# ── Privacy Modal ── #}
 {{ modal(
     id="privacy-modal",
-    title="Privacy Policy",
-    body="<p>We collect only the birth information you provide to generate your BaZi chart and report. We do not store payment information (processed by Stripe). You can request deletion of your data at any time by emailing us. We never sell or share personal data with third parties.</p><p style=\"margin-top:12px;\">Your birth data is used only for generating your personal reading and is stored securely. You have the right to access, correct, or delete your data at any time.</p>",
-    confirm="Got it",
+    title="隐私政策",
+    body="<p>我们仅收集你提供的出生信息用于生成八字命盘和报告。我们不存储支付信息（由 Stripe 处理）。你可以随时通过邮件请求删除数据。我们绝不会出售或分享你的个人数据给第三方。</p><p style=\"margin-top:12px;\">你的出生数据仅用于生成个人命理分析，并安全存储。你有权随时访问、更正或删除你的数据。</p>",
+    confirm="知道了",
     cancel="",
     size="sm"
 ) }}

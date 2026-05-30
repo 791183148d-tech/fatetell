@@ -1,26 +1,26 @@
 {% extends "base.html" %}
 {% from "components/_macros.html" import section_header, card, testimonial_card, stats_row, faq_item, cta_box, badge, btn %}
-{% block title %}FateTell — Discover Your Destiny Through AI BaZi Reading{% endblock %}
+{% block title %}FateTell — AI 八字命理：免费排盘 + 深度报告{% endblock %}
 
 {% block content %}
 <!-- Hero -->
 <section class="hero">
     <div class="container">
         <div class="hero-content hero-content--center">
-            <div class="ft-hero-tag">{{ badge("✨ 人工智能驱动 · 两千年的智慧") }}</div>
-            <h1>Discover the <em>Blueprint</em><br>of <span class="gold-glow">Your Life</span></h1>
+            <div class="ft-hero-tag">{{ badge("✨ 免费排盘 · AI 深度解读") }}</div>
+            <h1>输入出生时间<br>免费查看你的 <span class="gold-glow">八字命盘</span></h1>
             <p>
-                东方古老智慧的结晶。八字、奇门遁甲、手相、姓名学 —— 千年术数，AI 为你解读。
-                输入你的出生信息，即可获得一份深度的命理分析报告。
+                基于传统八字算法，AI 为你解读四柱八字、五行十神、大运流年。
+                先免费看排盘结果，再决定是否解锁完整解读报告。
             </p>
             <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;">
-                {{ btn("Get Your Reading — $29.99", href="/input", variant="primary", size="lg") }}
-                {{ btn("Learn About BaZi", href="/learn", variant="outline", size="lg") }}
+                {{ btn("免费排盘", href="/input", variant="primary", size="lg") }}
+                {{ btn("了解八字", href="/learn", variant="outline", size="lg") }}
             </div>
             {{ stats_row(stats=[
-                {"num": "2,000+", "label": "Years of Tradition"},
-                {"num": "10,000+", "label": "Words Per Report"},
-                {"num": "38.7%", "label": "Repeat Purchase Rate"},
+                {"num": "2,000+", "label": "年传统文化积淀"},
+                {"num": "10,000+", "label": "字深度解读报告"},
+                {"num": "38.7%", "label": "用户复购率"},
             ]) }}
         </div>
     </div>
@@ -29,17 +29,17 @@
 <!-- Explore Categories -->
 <section class="ft-section ft-section--alt ft-reveal">
     <div class="container">
-        {{ section_header(title='The World of <span class="gold">BaZi</span>', label="Explore", divider=True) }}
+        {{ section_header(title='<span class="gold">八字</span>世界', label="探索", divider=True) }}
         <div class="grid-4">
             {% for icon, title, desc, link in [
-                ("☯️", "Your BaZi Chart", "Get a full AI-powered reading of your Four Pillars", "/input"),
-                ("🌳", "Five Elements", "Understand Wood, Fire, Earth, Metal, Water", "/learn/wuxing"),
-                ("🐉", "Zodiac 2026", "Your Chinese zodiac forecast for the Year of the Horse", "/zodiac"),
-                ("📅", "Daily BaZi", "Today's energy based on the day's pillar", "/daily"),
-                ("❤️", "Compatibility", "Compare two charts for relationship insight", "/compatibility"),
-                ("📖", "BaZi Basics", "Learn the fundamentals of Chinese astrology", "/learn"),
-                ("⭐", "Heavenly Stems", "The 10 Celestial energies explained", "/learn/stems"),
-                ("🗺️", "Life Cycles", "Understanding your Da Yun (10-year cycles)", "/learn/dayun"),
+                ("☯️", "免费排盘", "输入出生信息，AI 即刻为你排出四柱八字", "/input"),
+                ("🌳", "五行分析", "木火土金水 — 了解你的五行平衡与喜用神", "/learn/wuxing"),
+                ("🐉", "2026 生肖", "马年运势全解析，事业爱情健康早知道", "/zodiac"),
+                ("📅", "每日八字", "今日干支能量解读，择吉避凶", "/daily"),
+                ("❤️", "合婚配对", "两人八字合婚，看五行是否相合", "/compatibility"),
+                ("📖", "八字入门", "从零开始学习中国传统命理", "/learn"),
+                ("⭐", "天干地支", "十天干十二地支的奥秘", "/learn/stems"),
+                ("🗺️", "大运流年", "十年一大运，一年一流年", "/learn/dayun"),
             ] %}
             {{ card(title=title, body=desc, variant="glow", icon=icon, href=link) }}
             {% endfor %}
@@ -47,24 +47,42 @@
     </div>
 </section>
 
-<!-- What You Get -->
+<!-- What's Free vs Paid -->
 <section class="ft-section ft-reveal">
     <div class="container">
-        {{ section_header(title='What\'s Inside Your <span class="gold">BaZi Reading</span>', label="Your Report", divider=True) }}
-        <div class="grid-3">
-            {% for icon, title, desc in [
-                ("☯️", "Your Day Master", "Discover your core element — Wood, Fire, Earth, Metal, or Water — and how it shapes your personality, strengths, and blind spots."),
-                ("⚖️", "Five Elements Balance", "See which elements dominate your chart and which are missing. Learn how to restore harmony."),
-                ("💼", "Career & Wealth", "Your natural professional tendencies, ideal work environments, and timing for career moves."),
-                ("❤️", "Relationships", "Your relationship patterns, communication style, and what you need in a partner."),
-                ("🗓️", "Life Cycles (Da Yun)", "The 10-year chapters of your life. What each phase brings and how to make the most of it."),
-                ("🔮", "2026 Forecast", "What the Year of the Horse holds for you — career, love, health, and personal growth."),
-            ] %}
-            {{ card(title=title, body=desc, icon=icon) }}
-            {% endfor %}
-        </div>
-        <div class="ft-center mt-6">
-            {{ btn("Start Your Reading — $29.99", href="/input", variant="primary", size="lg") }}
+        {{ section_header(title='免费 vs <span class="gold">完整报告</span>', label="透明定价", divider=True) }}
+        <div class="grid-2" style="gap:32px;">
+            <div class="ft-card" style="border:2px solid var(--gold);padding:40px;">
+                <div class="ft-center">
+                    <div style="font-size:3rem;">🆓</div>
+                    <h3 style="margin:16px 0 8px;">免费排盘</h3>
+                    <div style="font-size:2rem;color:var(--gold);font-weight:700;">$0</div>
+                    <ul style="list-style:none;margin:24px 0;text-align:left;line-height:2.2;">
+                        <li>✓ 四柱八字（年柱·月柱·日柱·时柱）</li>
+                        <li>✓ 日主五行强弱分析</li>
+                        <li>✓ 五行统计与平衡</li>
+                        <li>✓ 十神分布</li>
+                        <li>✓ 大运排盘（每十年）</li>
+                    </ul>
+                    {{ btn("免费排盘", href="/input", variant="primary", size="md") }}
+                </div>
+            </div>
+            <div class="ft-card ft-card--glow" style="padding:40px;">
+                <div class="ft-center">
+                    <div style="font-size:3rem;">📖</div>
+                    <h3 style="margin:16px 0 8px;">完整解读报告</h3>
+                    <div style="font-size:2rem;color:var(--gold);font-weight:700;">$29.99</div>
+                    <ul style="list-style:none;margin:24px 0;text-align:left;line-height:2.2;">
+                        <li>✓ 包含免费排盘全部内容</li>
+                        <li>✓ AI 深度性格分析</li>
+                        <li>✓ 事业财运详细解读</li>
+                        <li>✓ 感情婚姻分析</li>
+                        <li>✓ 大运流年深度解析</li>
+                        <li>✓ 2026 年详细运势</li>
+                    </ul>
+                    {{ btn("查看完整报告 — $29.99", href="/input", variant="outline", size="md") }}
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -72,12 +90,12 @@
 <!-- How It Works -->
 <section class="ft-section ft-section--alt ft-reveal">
     <div class="container">
-        {{ section_header(title='How It <span class="gold">Works</span>', label="Simple Process", divider=True) }}
+        {{ section_header(title='如何使用', label="三步流程", divider=True) }}
         <div class="grid-3">
             {% for num, title, desc in [
-                ("01", "Enter Your Birth Info", "Your birth date, time, and gender. That's all we need to calculate your complete BaZi chart using traditional algorithms."),
-                ("02", "AI Analyzes Your Chart", "Our engine computes the Four Pillars, Five Elements balance, Ten Gods, and Da Yun cycles. Then Claude AI generates your personalized interpretation."),
-                ("03", "Read Your Life Report", "A beautifully formatted 10,000+ word report with deep insights about your personality, life path, relationships, and timing."),
+                ("01", "输入出生信息", "年、月、日、时、性别。只需这些，系统即按照传统算法计算你的完整八字命盘。"),
+                ("02", "免费查看排盘", "四柱八字、五行强弱、十神分布、大运排列 —— 全部免费呈现。"),
+                ("03", "解锁完整解读", "AI 生成万字深度报告：性格分析、事业财运、感情婚姻、大运流年、2026 运势。"),
             ] %}
             <div class="ft-card ft-card--glow ft-center">
                 <div class="ft-step-number">{{ num }}</div>
@@ -92,15 +110,15 @@
 <!-- Testimonials -->
 <section class="ft-section ft-reveal">
     <div class="container" style="max-width:700px;">
-        {{ section_header(title='What Our <span class="gold">Readers Say</span>', label="Testimonials", divider=True) }}
+        {{ section_header(title='用户 <span class="gold">评价</span>', label="口碑", divider=True) }}
         <div style="display:grid;gap:20px;">
             {% for name, location, text in [
-                ("Sarah K.", "New York, USA", "I was skeptical about Chinese astrology, but this reading was eerily accurate about my career patterns. It explained why I've always felt torn between two paths — my BaZi chart shows competing elements I never knew about."),
-                ("James M.", "London, UK", "The 2026 forecast told me to expect a career shift in Q2. I just got a promotion offer I wasn't expecting. Whether it's destiny or self-awareness, this report gave me clarity."),
-                ("Yuki T.", "Tokyo, Japan", "As someone who grew up with Western astrology, BaZi was a revelation. The Five Elements analysis explained my personality in a way that felt much deeper than my Sun sign."),
-                ("Alex R.", "Berlin, Germany", "I've spent hundreds on human fortune tellers. This $29 report was more detailed and practical than any of them. The Da Yun (life cycles) section was scarily accurate about my past."),
-                ("Maria L.", "São Paulo, Brazil", "The compatibility section helped me understand why I clash with my boss. We have opposing Day Masters — Metal vs Fire. Now I know how to communicate better."),
-                ("David C.", "Sydney, Australia", "I bought this on a whim. Ended up staying up until 3am reading it. The personality analysis was so specific it felt like it was written by someone who knows me."),
+                ("Sarah K.", "纽约", "一开始只是好奇，没想到八字分析这么准。报告里说的性格特点跟我一模一样，大运部分对我过去的描述准确得吓人。"),
+                ("James M.", "伦敦", "2026 运势说第二季度事业有变动，结果真收到了一个意外的晋升 offer。不管是命运还是自我认知，这份报告都让我豁然开朗。"),
+                ("Yuki T.", "东京", "以前只看西方星座，八字完全是另一个维度。五行分析对我的性格解读比太阳星座深刻太多了。"),
+                ("Alex R.", "柏林", "花过几百块找算命先生，这份 $29 的报告比任何一次都详细实用。大运那段对我过去的总结准得可怕。"),
+                ("Maria L.", "圣保罗", "合婚配对让我明白为什么跟老板总合不来 — 我是火命他是金命，火克金。现在知道怎么沟通了。"),
+                ("David C.", "悉尼", "一时兴起买的，结果看到凌晨 3 点。性格分析具体得像是认识我的人写的。"),
             ] %}
             {{ testimonial_card(text=text, name=name, location=location) }}
             {% endfor %}
@@ -111,15 +129,15 @@
 <!-- FAQ -->
 <section class="ft-section ft-section--alt">
     <div class="container" style="max-width:650px;">
-        {{ section_header(title='Frequently Asked <span class="gold">Questions</span>', label="FAQ", divider=True) }}
+        {{ section_header(title='常见 <span class="gold">问题</span>', label="FAQ", divider=True) }}
         {% for q, a in [
-            ("What exactly is BaZi?", "BaZi (八字), meaning 'Eight Characters', is a Chinese metaphysical system that uses your birth year, month, day, and hour to map your life's potential. Think of it as a cosmic user manual — it reveals your innate strengths, challenges, and the natural rhythms of your life."),
-            ("Is this fortune telling?", "Not in the way you might think. BaZi doesn't predict fixed events. Instead, it describes tendencies, timing, and energies — like a weather report for your life. We focus on self-discovery and practical guidance."),
-            ("What if I don't know my birth time?", "An approximate time works! The Four Pillars use the hour pillar for about 20% of the insight. If you don't know your exact time, selecting 12:00 PM gives you 80% of the reading's value."),
-            ("How accurate is the AI report?", "Our BaZi calculations follow traditional algorithms used for centuries. The AI interpretation is trained on classical texts and modern psychological insights. Users consistently report that the personality analysis is remarkably accurate."),
-            ("Can I get a refund?", "Absolutely. If you feel the report doesn't provide value, email us within 7 days for a full refund. No questions asked."),
-            ("How is my data handled?", "Your birth data is used only to generate your chart and report. We never share or sell your personal information. You can request deletion anytime."),
-            ("Do you offer compatibility readings?", "Yes! You can compare two charts in our Compatibility section. It analyzes how the Five Elements and Day Masters interact between two people."),
+            ("什么是八字？", "八字（BaZi）是中国传统命理学系统，根据你的出生年、月、日、时推算四个柱（每柱两个字），共八个字。它揭示了你的先天特质、优势和人生节奏。"),
+            ("这算算命吗？", "八字不是固定命运的预测。它描述的是倾向、时机和能量 —— 就像人生的天气预报。我们专注于自我认知和实用指导。"),
+            ("不知道出生时间怎么办？", "可以用大致时间！时柱占约 20% 的信息量。如果不知道准确时间，选择 12:00 可以获得 80% 的解读价值。"),
+            ("AI 报告准吗？", "八字计算遵循数百年传承的传统算法。AI 解读基于古典文献和现代心理学。用户反馈性格分析的准确度非常高。"),
+            ("可以退款吗？", "当然。如果你觉得报告没有价值，7 天内发邮件给我们，全额退款。无理由。"),
+            ("我的数据安全吗？", "出生信息仅用于生成命盘和报告。我们不会分享或出售你的个人信息。可随时请求删除数据。"),
+            ("支持合婚配对吗？", "支持！在合婚配对页面可以比较两个人的八字，分析五行和日主之间的相互作用。"),
         ] %}
         {{ faq_item(question=q, answer=a) }}
         {% endfor %}
@@ -131,12 +149,12 @@
     <div class="container ft-center">
         <div class="ft-card ft-card--glow" style="max-width:600px;margin:0 auto;padding:48px;">
             <h2 class="ft-section__title" style="font-size:2rem;line-height:1.2;">
-                Ready to Discover <span class="gold">Your Blueprint</span>?
+                免费查看你的 <span class="gold">八字命盘</span>
             </h2>
             <p class="ft-muted" style="margin:16px 0 32px;">
-                东方古老智慧的结晶。你的命盘、奇门、手相，AI 为你一一道来。
+                先看排盘，满意再解锁完整报告。无隐藏费用。
             </p>
-            {{ btn("Get Your BaZi Reading — $29.99", href="/input", variant="primary", size="lg") }}
+            {{ btn("免费排盘", href="/input", variant="primary", size="lg") }}
         </div>
     </div>
 </section>
